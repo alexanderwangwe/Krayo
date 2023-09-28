@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Krayo" parent="android:Theme.Material.NoActionBar">
-
     </style>
     <style name="Theme.Krayo.SplashScreen" parent="Theme.SplashScreen">
         <item name="android:windowBackground">#181818</item>

@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Krayo</string>
+
+    // Bottom Navigation strings
+    <string name="home">Home</string>
+    <string name="discover">Discover</string>
+    <string name="add">Add</string>
+    <string name="chat">Chat</string>
+    <string name="profile">Profile</string>
+
+    // Home Screen strings
+    <string name="logo">Krayo logo</string>
+    <string name="search">Search</string>
+    <string name="for_you">For you</string>
+    <string name="following">Following</string>
+    <string name="notifications">Notifications</string>
+    <string name="fullscreen">Fullscreen</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="share">Share</string>
+
 </resources>

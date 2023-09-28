@@ -1,4 +1,4 @@
-package com.krayo.art.ui.screens.profile
+package com.krayo.art.ui.screens.authentication
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun ProfileScreen(){
+fun AuthenticationScreen(){
     Surface(
         modifier = Modifier
             .fillMaxSize(),
@@ -22,7 +22,7 @@ fun ProfileScreen(){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Profile: Coming Soon",  style = MaterialTheme.typography.bodyLarge, color = Color.White)
+            Text("Authentication: Coming Soon",  style = MaterialTheme.typography.bodyLarge, color = Color.White)
         }
     }
 }

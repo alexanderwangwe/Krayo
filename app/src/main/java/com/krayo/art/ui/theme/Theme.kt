@@ -7,22 +7,29 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Grey80,
-    secondary = Purple80,
-    tertiary = Green80,
+    primary = Purple80,
+    secondary = Green80,
+    tertiary = Red80,
     background = Grey80,
+    surface = Grey60,
+    error = Red80,
+    onSurface = LightText,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Grey80,
-    secondary = Purple80,
-    tertiary = Green80,
+    primary = Purple80,
+    secondary = Green80,
+    tertiary = Red80,
     background = Grey80,
+    surface = Grey60,
+    error = Red80,
+    onSurface = LightText,
 
     /* Other default colors to override
 
@@ -55,8 +62,8 @@ fun KrayoTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            window.navigationBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color(0xFF090909).toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
