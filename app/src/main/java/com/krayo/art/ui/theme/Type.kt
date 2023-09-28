@@ -25,8 +25,8 @@ val fontFamily = FontFamily(
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = fontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
