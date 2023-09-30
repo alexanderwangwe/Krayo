@@ -3,8 +3,8 @@
     <style name="Theme.Krayo" parent="android:Theme.Material.NoActionBar">
     </style>
     <style name="Theme.Krayo.SplashScreen" parent="Theme.SplashScreen">
-        <item name="android:windowBackground">#181818</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="windowSplashScreenBackground">#B7B7FF</item>
+        <item name="postSplashScreenTheme">@style/Theme.Krayo</item>
     </style>
 </resources>

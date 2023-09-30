@@ -5,32 +5,32 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -52,6 +52,7 @@ import com.krayo.art.ui.theme.KrayoTheme
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -64,8 +65,7 @@ class MainActivity : ComponentActivity() {
                     containerColor = MaterialTheme.colorScheme.surface,
                     bottomBar = {
                         BottomNavigationBar(
-                            WindowInsets.navigationBars,
-                            navController = navController
+                            WindowInsets.navigationBars, navController = navController
                         )
                     },
                     contentWindowInsets = WindowInsets.statusBars
@@ -80,31 +80,31 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.DISCOVER.name) {
-                            DiscoverScreen()
+                            DiscoverScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.CONTENT_CREATION.name) {
-                            ContentCreationScreen()
+                            ContentCreationScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.CHAT.name) {
-                            CommunitiesScreen()
+                            CommunitiesScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.PROFILE.name) {
-                            ProfileScreen()
+                            ProfileScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.ANALYTICS.name) {
-                            AnalyticsScreen()
+                            AnalyticsScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.AUTHENTICATION.name) {
-                            AuthenticationScreen()
+                            AuthenticationScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.COMMUNITIES.name) {
-                            CommunitiesScreen()
+                            CommunitiesScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.DASHBOARD.name) {
-                            DashboardScreen()
+                            DashboardScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.CONTENT_SEARCH.name) {
-                            ContentSearchScreen()
+                            ContentSearchScreen(navController, innerPadding)
                         }
                     }
                 }
@@ -116,9 +116,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun BottomNavigationBar(
-    windowInsets: WindowInsets,
-    modifier: Modifier = Modifier,
-    navController: NavController
+    windowInsets: WindowInsets, modifier: Modifier = Modifier, navController: NavController
 ) {
     var bottomNavState by rememberSaveable {
         mutableStateOf(
@@ -126,88 +124,81 @@ private fun BottomNavigationBar(
         )
     }
 
-    val contentColors = listOf(
-        Color(0xBF181818),
-        Color(0xFF000000)
+    val colors = NavigationBarItemDefaults.colors(
+        selectedIconColor = MaterialTheme.colorScheme.primary,
+        unselectedIconColor = Color.White,
+        indicatorColor = MaterialTheme.colorScheme.background,
     )
-    val normalColors = listOf(
-        MaterialTheme.colorScheme.surface,
-        Color(0xFF000000)
-    )
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = if (bottomNavState == Destinations.HOME.name) contentColors else normalColors
+    NavigationBar(
+        modifier = modifier.height(75.dp).background(brush = Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.primary,
+                MaterialTheme.colorScheme.secondary
+            )
+        )),
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.primary,
+        tonalElevation = 0.dp,
+        windowInsets = windowInsets
+    ) {
+        NavigationBarItem(selected = bottomNavState == Destinations.HOME.name, onClick = {
+            bottomNavState = Destinations.HOME.name
+            navController.navigate(Destinations.HOME.name)
+        }, icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_home_24),
+                contentDescription = stringResource(
+                    id = R.string.home
                 )
             )
-            .fillMaxWidth()
-            .height(100.dp)
-            .padding(windowInsets.asPaddingValues())
-
-    ) {
-        BottomNavigationItem(
-            icon = R.drawable.outline_home_24,
-            label = R.string.home,
-            selected = bottomNavState == Destinations.HOME.name,
-            onClick = {
-                bottomNavState = Destinations.HOME.name
-                navController.navigate(Destinations.HOME.name)
-            }
-        )
-        BottomNavigationItem(
-            icon = R.drawable.outline_remove_red_eye_24,
-            label = R.string.discover,
-            selected = bottomNavState == Destinations.DISCOVER.name,
-            onClick = {
-                bottomNavState = Destinations.DISCOVER.name
-                navController.navigate(Destinations.DISCOVER.name)
-            }
-        )
-        BottomNavigationItem(
-            icon = R.drawable.baseline_add_24,
-            label = R.string.add,
+        }, colors = colors)
+        NavigationBarItem(selected = bottomNavState == Destinations.DISCOVER.name, onClick = {
+            bottomNavState = Destinations.DISCOVER.name
+            navController.navigate(Destinations.DISCOVER.name)
+        }, icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_remove_red_eye_24),
+                contentDescription = stringResource(
+                    id = R.string.discover
+                )
+            )
+        }, colors = colors)
+        NavigationBarItem(
             selected = bottomNavState == Destinations.CONTENT_CREATION.name,
             onClick = {
                 bottomNavState = Destinations.CONTENT_CREATION.name
                 navController.navigate(Destinations.CONTENT_CREATION.name)
-            }
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_add_24),
+                    contentDescription = stringResource(
+                        id = R.string.add
+                    )
+                )
+            }, colors = colors
         )
-        BottomNavigationItem(
-            icon = R.drawable.baseline_chat_bubble_outline_24,
-            label = R.string.chat,
-            selected = bottomNavState == Destinations.CHAT.name,
-            onClick = {
-                bottomNavState = Destinations.CHAT.name
-                navController.navigate(Destinations.CHAT.name)
-            }
-        )
-        BottomNavigationItem(
-            icon = R.drawable.outline_person_24,
-            label = R.string.profile,
-            selected = bottomNavState == Destinations.PROFILE.name,
-            onClick = {
-                bottomNavState = Destinations.PROFILE.name
-                navController.navigate(Destinations.PROFILE.name)
-            }
-        )
+        NavigationBarItem(selected = bottomNavState == Destinations.CHAT.name, onClick = {
+            bottomNavState = Destinations.CHAT.name
+            navController.navigate(Destinations.CHAT.name)
+        }, icon = {
+            Icon(
+                painter = painterResource(R.drawable.baseline_chat_bubble_outline_24),
+                contentDescription = stringResource(
+                    id = R.string.chat
+                )
+            )
+        }, colors = colors)
+        NavigationBarItem(selected = bottomNavState == Destinations.PROFILE.name, onClick = {
+            bottomNavState = Destinations.PROFILE.name
+            navController.navigate(Destinations.PROFILE.name)
+        }, icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_person_24),
+                contentDescription = stringResource(
+                    id = R.string.profile
+                )
+            )
+        }, colors = colors)
     }
-}
-
-@Composable
-private fun BottomNavigationItem(
-    modifier: Modifier = Modifier,
-    icon: Int,
-    label: Int,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    Icon(
-        tint = if (selected) MaterialTheme.colorScheme.primary else Color.White,
-        modifier = modifier.clickable { onClick() },
-        painter = painterResource(id = icon),
-        contentDescription = stringResource(label)
-    )
 }
