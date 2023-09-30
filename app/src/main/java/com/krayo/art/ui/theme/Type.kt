@@ -18,13 +18,21 @@ val provider = GoogleFont.Provider(
 val fontName = GoogleFont("Poppins")
 
 val fontFamily = FontFamily(
-    Font(googleFont = fontName, fontProvider = provider)
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Normal)
+)
+
+val fontFamilyBold = FontFamily(
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Bold)
+)
+
+val fontFamilyLight = FontFamily(
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Light)
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = fontFamily,
+        fontFamily = fontFamilyBold,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
@@ -38,14 +46,14 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
     bodySmall = TextStyle(
-        fontFamily = fontFamily,
+        fontFamily = fontFamilyLight,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = fontFamily,
+        fontFamily = fontFamilyBold,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
