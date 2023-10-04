@@ -46,6 +46,7 @@ import com.krayo.art.ui.screens.dashboard.DashboardScreen
 import com.krayo.art.ui.screens.discover.DiscoverScreen
 import com.krayo.art.ui.screens.home.HomeScreen
 import com.krayo.art.ui.screens.profile.ProfileScreen
+import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.theme.KrayoTheme
 
 
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Destinations.HOME.name,
+                        startDestination = Destinations.ONBOARDING.name,
 
                         ) {
                         composable(route = Destinations.HOME.name) {
@@ -105,6 +106,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Destinations.CONTENT_SEARCH.name) {
                             ContentSearchScreen()
+                        }
+                        composable(route = Destinations.ONBOARDING.name) {
+                            OnboardingScreen()
                         }
                     }
                 }
