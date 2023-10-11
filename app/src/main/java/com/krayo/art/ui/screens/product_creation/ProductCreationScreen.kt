@@ -1,32 +1,226 @@
 package com.krayo.art.ui.screens.product_creation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.krayo.art.R
+import com.krayo.art.constants.Destinations
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProductCreationScreen(
+    navController: NavController,
+    innerPadding: PaddingValues
+) {
+    Scaffold(
+        topBar = {
+            ProductCreationTopBar(
+                navController = navController,
+                modifier = Modifier,
+                paddingValues = WindowInsets.statusBars.asPaddingValues()
+            )
+        },
+        floatingActionButton = {
+            AddProductFAB(navController = navController, modifier = Modifier)
+        },
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier.padding(paddingValues),
+        ) {
+            ProductsListing()
+        }
+    }
+}
 
 @Composable
-fun ProductCreationScreen() {
+private fun AddProductFAB(
+    navController: NavController,
+    modifier: Modifier
+) {
     Surface(
-        modifier = Modifier
-            .fillMaxSize(),
-        color = MaterialTheme.colorScheme.surface
+        modifier = modifier
+            .padding(15.dp)
+            .clickable {
+                navController.navigate(Destinations.ADD_PRODUCT.name)
+            }
+            .size(50.dp),
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.primary
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Icon(
+            modifier = modifier.padding(10.dp),
+            tint = MaterialTheme.colorScheme.onPrimary,
+            painter = painterResource(id = R.drawable.plus_math),
+            contentDescription = stringResource(id = R.string.add_product)
+        )
+    }
+}
+
+@Composable
+private fun ProductCreationTopBar(
+    navController: NavController,
+    modifier: Modifier,
+    paddingValues: PaddingValues
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(paddingValues)
+            .padding(15.dp),
+    ) {
+        Surface(
+            modifier = modifier
+                .size(40.dp),
+            color = MaterialTheme.colorScheme.background,
+            shape = CircleShape
         ) {
-            Text(
-                "ProductCreation: Coming Soon",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
+            Icon(
+                modifier = modifier
+                    .padding(10.dp)
+                    .clickable {
+                        navController.popBackStack()
+                    },
+                tint = MaterialTheme.colorScheme.onSurface,
+                painter = painterResource(id = R.drawable.back),
+                contentDescription = stringResource(id = R.string.go_back)
+            )
+        }
+        Text(
+            text = stringResource(id = R.string.products),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Surface(
+            modifier = modifier
+                .size(40.dp),
+            color = MaterialTheme.colorScheme.background,
+            shape = CircleShape
+        ) {
+            Icon(
+                modifier = modifier
+                    .padding(10.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = stringResource(id = R.string.search)
             )
         }
     }
+}
+
+@Composable
+private fun Product() {
+    var isAttached by remember { mutableStateOf(false) }
+    val attachText = if (isAttached) {
+        stringResource(id = R.string.detach)
+    } else {
+        stringResource(id = R.string.attach)
+    }
+    val attachIcon = if (isAttached) {
+        painterResource(id = R.drawable.icon_remove)
+    } else {
+        painterResource(id = R.drawable.plus_math)
+    }
+    val color = if (isAttached) {
+        MaterialTheme.colorScheme.error
+    } else {
+        MaterialTheme.colorScheme.primary
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .border(1.dp, MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(10.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxHeight(),
+        ) {
+            Icon(
+                modifier = Modifier.padding(10.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = stringResource(id = R.string.search)
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            Column {
+                Text(text = "Product Name")
+                Text(text = "Product Description", style = MaterialTheme.typography.bodyMedium)
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .clickable {
+                        isAttached = !isAttached
+                    },
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Icon(
+                    tint = color,
+                    painter = attachIcon,
+                    contentDescription = attachText
+                )
+                Text(
+                    text = attachText,
+                    color = color,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProductsListing() {
+    LazyVerticalGrid(columns = GridCells.Fixed(1), content = {
+        items(10) {
+            Product()
+        }
+    })
 }
