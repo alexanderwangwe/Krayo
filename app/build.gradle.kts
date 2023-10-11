@@ -64,7 +64,19 @@ dependencies {
     implementation ("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
     implementation("androidx.navigation:navigation-compose:2.7.3")
-    implementation ("androidx.palette:palette-ktx:1.0.0")
+    implementation("androidx.palette:palette-ktx:1.0.0")
+    implementation("androidx.compose.material:material:1.5.2")
+
+    // CameraX core library using the camera2 implementation
+    val camerax_version = "1.4.0-alpha01"
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    implementation("androidx.camera:camera-video:${camerax_version}")
+    implementation("androidx.camera:camera-view:${camerax_version}")
+    implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
+    implementation("androidx.camera:camera-extensions:${camerax_version}")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

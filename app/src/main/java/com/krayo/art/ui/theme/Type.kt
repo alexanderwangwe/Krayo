@@ -1,5 +1,6 @@
 package com.krayo.art.ui.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -18,17 +19,25 @@ val provider = GoogleFont.Provider(
 val fontName = GoogleFont("Poppins")
 
 val fontFamily = FontFamily(
-    Font(googleFont = fontName, fontProvider = provider)
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Normal)
+)
+
+val fontFamilyBold = FontFamily(
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Bold)
+)
+
+val fontFamilyLight = FontFamily(
+    Font(googleFont = fontName, fontProvider = provider, weight = FontWeight.Light)
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = fontFamily,
+        fontFamily = fontFamilyBold,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = fontFamily,
@@ -38,15 +47,29 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
     bodySmall = TextStyle(
-        fontFamily = fontFamily,
+        fontFamily = fontFamilyLight,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = fontFamily,
+        fontFamily = fontFamilyBold,
         fontWeight = FontWeight.Bold,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = fontFamilyLight,
+        fontWeight = FontWeight.Light,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
