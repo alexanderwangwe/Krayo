@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.krayo.art.R
 import com.krayo.art.constants.Destinations
 
 //@Preview(showBackground = true, backgroundColor = 0xFF00FF00)
@@ -167,36 +170,46 @@ fun FirstOnboardingScreen(
 
 @Composable
 fun PagerScreen(onBoardingPages: OnBoardingPages) {
+   /* Box( modifier = Modifier.fillMaxSize()) {
+        Image(painter = painterResource(id = onBoardingPages.image),
+            contentDescription = "Background Image",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
+    } */
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
+
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        /* Image(
-            modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.7f),
-            painter = painterResource(id = onBoardingPages.image),
-            contentDescription = "Pager Image"
-        ) */
+
         Text(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .width(271.dp)
+                .padding(horizontal = 46.dp)
+                .padding(top = 277.dp),
             text = onBoardingPages.title,
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Left,
+            color = MaterialTheme.colorScheme.onPrimary
+
         )
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp)
-                .padding(top = 20.dp),
+                .padding(top = 46.dp)
+                .width(302.dp),
             text = onBoardingPages.description,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Left,
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }
