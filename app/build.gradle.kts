@@ -66,6 +66,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.palette:palette-ktx:1.0.0")
     implementation("androidx.compose.material:material:1.5.2")
+    implementation("androidx.datastore:datastore-preferences-android:1.1.0-alpha05")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
