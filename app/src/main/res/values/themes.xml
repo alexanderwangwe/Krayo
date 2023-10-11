@@ -4,7 +4,7 @@
     </style>
     <style name="Theme.Krayo.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
-        <item name="windowSplashScreenBackground">#B7B7FF</item>
+        <item name="windowSplashScreenBackground">#000</item>
         <item name="postSplashScreenTheme">@style/Theme.Krayo</item>
     </style>
 </resources>

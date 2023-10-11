@@ -11,12 +11,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -50,7 +49,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -73,7 +71,10 @@ import kotlinx.coroutines.launch
     ExperimentalMaterialApi::class
 )
 @Composable
-fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
+fun HomeScreen(
+    navController: NavController,
+    paddingValues: PaddingValues,
+    updateShowNavState: (Boolean) -> Unit = {}) {
     var hideContent by remember {
         mutableStateOf(false)
     }
@@ -94,7 +95,12 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
             10
         })
         val scope = rememberCoroutineScope()
-        val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+        val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        if (sheetState.currentValue != ModalBottomSheetValue.Hidden) {
+            updateShowNavState(false)
+        }else{
+            updateShowNavState(true)
+        }
         ModalBottomSheetLayout(
             sheetBackgroundColor = MaterialTheme.colorScheme.surface,
             sheetState = sheetState,
@@ -105,16 +111,21 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
         ) {
             VerticalPager(state = pagerState) { page ->
                 Content(
+                    updateShowNavState = {
+                        updateShowNavState(it)
+                    },
                     hideContent = hideContent,
                     updateHideState = {
                         hideContent = !hideContent
                     },
+                    navController = navController,
                     updateCommentModalSheetState = {
                         scope.launch {
                             if (sheetState.isVisible) {
                                 sheetState.hide()
                             } else {
                                 sheetState.show()
+                                //updateShowNavState(false)
                             }
                         }
                     },
@@ -144,10 +155,7 @@ fun Comment(
 ) {
     Row(
         modifier = modifier
-            .padding(15.dp)
-            .clickable {
-                navController.navigate(Destinations.PROFILE.name)
-            },
+            .padding(15.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row() {
@@ -168,40 +176,34 @@ fun Comment(
                     .weight(1f)
             ) {
                 Text(
+                    color = MaterialTheme.colorScheme.onSurface,
                     text = comment.name,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White
                 )
                 Text(
+                    color = MaterialTheme.colorScheme.onSurface,
                     text = comment.comment,
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Light,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White
                 )
                 Row(
                     modifier = modifier.padding(top = 5.dp),
                 ){
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_favorite_24),
+                        painter = painterResource(id = R.drawable.heart),
                         contentDescription = stringResource(id = R.string.like),
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier
+                            .size(20.dp)
                             .clickable {
                                 // Handle like
                             }
                     )
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_insert_comment_24),
-                        contentDescription = stringResource(id = R.string.comment),
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.padding(horizontal = 15.dp).size(20.dp)
-                            .clickable {
-                                // Handle add reply
-                            }
-                    )
+                    Spacer(Modifier.width(10.dp))
+                    Text("reply", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
@@ -214,10 +216,12 @@ fun Comments(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    val count = 7
-    Column(modifier = modifier.zIndex(10f)){
+    val count = 14255
+    Column(modifier = modifier
+        .zIndex(10f)
+        .fillMaxHeight(0.75f)){
         Text(
-            text = "Comments",
+            text = "Comments - $count",
             style = TextStyle(
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                 fontFamily = fontFamilyBold,
@@ -246,6 +250,8 @@ fun Content(
     hideContent: Boolean,
     modifier: Modifier = Modifier,
     contentInfoData: ContentInfoData,
+    navController: NavController,
+    updateShowNavState: (Boolean) -> Unit = {},
     updateHideState: () -> Unit = {},
     updateCommentModalSheetState: () -> Unit = {}
 ) {
@@ -282,6 +288,7 @@ fun Content(
                 when (it) {
                     Interactions.LIKE -> {
                         // Update DB
+                        navController.navigate(Destinations.AUTHENTICATION.name)
                     }
 
                     Interactions.COMMENT -> {
@@ -336,10 +343,11 @@ fun TopBar(
     ) {
 
         Icon(
-            painter = painterResource(id = R.drawable.outline_notifications_active_24),
+            painter = painterResource(id = R.drawable.alarm),
             contentDescription = stringResource(id = R.string.search),
             tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
+            modifier = Modifier.width(25.dp)
+                .height(25.dp)
                 .clickable {
                     navController.navigate(Destinations.CONTENT_SEARCH.name)
                 }
@@ -394,10 +402,11 @@ fun TopBar(
             )
         }
         Icon(
-            painter = painterResource(id = R.drawable.outline_search_24),
+            painter = painterResource(id = R.drawable.search),
             contentDescription = stringResource(id = R.string.search),
             tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
+            modifier = Modifier.width(25.dp)
+                .height(25.dp)
                 .clickable {
                     navController.navigate(Destinations.CONTENT_SEARCH.name)
                 }
@@ -462,7 +471,7 @@ fun Interactions(
         horizontalAlignment = Alignment.End
     ) {
         InteractionItem(
-            icon = R.drawable.baseline_favorite_24,
+            icon = R.drawable.heart,
             label = R.string.like,
             selected = selected == Interactions.LIKE,
             liked = liked,
@@ -473,7 +482,7 @@ fun Interactions(
                 liked = !liked
             })
         InteractionItem(
-            icon = R.drawable.baseline_insert_comment_24,
+            icon = R.drawable.speech_bubble2,
             label = R.string.comment,
             selected = selected == Interactions.COMMENT,
             type = Interactions.COMMENT,
@@ -482,7 +491,7 @@ fun Interactions(
                 onClick(Interactions.COMMENT)
             })
         InteractionItem(
-            icon = R.drawable.baseline_bookmark_add_24,
+            icon = R.drawable.add_bookmark,
             label = R.string.bookmark,
             selected = selected == Interactions.BOOKMARK,
             bookmarked = bookmarked,
@@ -493,7 +502,7 @@ fun Interactions(
                 bookmarked = !bookmarked
             })
         InteractionItem(
-            icon = R.drawable.baseline_ios_share_24,
+            icon = R.drawable.share,
             label = R.string.share,
             selected = selected == Interactions.SHARE,
             type = Interactions.SHARE,
@@ -551,7 +560,7 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
                             .clickable {
                                 // TODO: Add functionality
                             },
-                        painter = painterResource(id = R.drawable.baseline_add_24),
+                        painter = painterResource(id = R.drawable.plus_math),
                         contentDescription = stringResource(id = R.string.add),
                         tint = Color.Black
                     )
@@ -575,7 +584,7 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
                 if (text[0] == '#') {
                     Text(
                         text = "$text ",
-                        fontFamily = fontFamily,
+                        fontFamily = fontFamilyBold,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White
@@ -593,7 +602,7 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
             if (showMore) {
                 Text(
                     text = "...show more",
-                    fontFamily = fontFamily,
+                    fontFamily = fontFamilyBold,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White,
@@ -605,7 +614,7 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
             } else {
                 Text(
                     text = "show less",
-                    fontFamily = fontFamily,
+                    fontFamily = fontFamilyBold,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White,
@@ -616,6 +625,5 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
                 )
             }
         }
-
     }
 }
