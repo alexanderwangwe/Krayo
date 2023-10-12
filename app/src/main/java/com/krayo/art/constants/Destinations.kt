@@ -11,5 +11,6 @@ enum class Destinations {
     COMMUNITIES,
     DASHBOARD,
     CONTENT_SEARCH,
-    ONBOARDING
+    ONBOARDING,
+    ONBOARDINGPROCESS
 }

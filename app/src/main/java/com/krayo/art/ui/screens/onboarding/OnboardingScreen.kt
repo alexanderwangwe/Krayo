@@ -1,24 +1,15 @@
 package com.krayo.art.ui.screens.onboarding
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,24 +20,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.krayo.art.R
 import com.krayo.art.constants.Destinations
 
-//@Preview(showBackground = true, backgroundColor = 0xFF00FF00)
 @Composable
-fun OnboardingScreen(navController: NavHostController, innerPadding: PaddingValues) {
+fun OnboardingScreen(navController: NavController, paddingValues: PaddingValues) {
+
+    val navController = rememberNavController()
 
     Surface(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .absolutePadding(bottom = paddingValues.calculateBottomPadding()),
         color = MaterialTheme.colorScheme.surface
     ) {
         Column(
@@ -90,10 +81,11 @@ fun OnboardingScreen(navController: NavHostController, innerPadding: PaddingValu
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
                 enabled = true,
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate(Destinations.ONBOARDINGPROCESS.name)
+                },
 
             ) {
-
                 Text(text = "Post and sell your creations")
             }
 
@@ -112,7 +104,7 @@ fun OnboardingScreen(navController: NavHostController, innerPadding: PaddingValu
                 ),
                 enabled = true,
                 onClick = {
-                    navController.navigate(OnboardingProcess.FirstOnboardingScreen.route)
+                    navController.navigate(Destinations.ONBOARDINGPROCESS.name)
                 },
 
                 ) {
@@ -126,176 +118,4 @@ fun OnboardingScreen(navController: NavHostController, innerPadding: PaddingValu
     }
 }
 
-@Composable
-fun OnboardingProcess(){
 
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@ExperimentalAnimationApi
-@Composable
-fun FirstOnboardingScreen(
-    navController: NavHostController
-) {
-    val pages = listOf(
-        OnBoardingPages.First,
-        OnBoardingPages.Second,
-        OnBoardingPages.Third,
-        OnBoardingPages.Fourth,
-        OnBoardingPages.Fifth,
-        OnBoardingPages.Sixth,
-        OnBoardingPages.Final
-    )
-    val pagerState = rememberPagerState(pageCount = {7})
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(
-            modifier = Modifier.weight(10f),
-            state = pagerState,
-            verticalAlignment = Alignment.Top
-        ) { position ->
-            PagerScreen(onBoardingPages = pages[position])
-        }
-
-        FinishButton(
-            modifier = Modifier.weight(1f),
-            pagerState = pagerState
-        ) {
-            /* welcomeViewModel.saveOnBoardingState(completed = true)
-            navController.popBackStack()
-            navController.navigate(Destinations.CONTENT_CREATION.name) */
-        }
-    }
-}
-
-@Composable
-fun PagerScreen(onBoardingPages: OnBoardingPages) {
-   /* Box( modifier = Modifier.fillMaxSize()) {
-        Image(painter = painterResource(id = onBoardingPages.image),
-            contentDescription = "Background Image",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-        )
-    } */
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .width(271.dp)
-                .padding(horizontal = 46.dp)
-                .padding(top = 277.dp),
-            text = onBoardingPages.title,
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Left,
-            color = MaterialTheme.colorScheme.onPrimary
-
-        )
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .padding(top = 46.dp)
-                .width(302.dp),
-            text = onBoardingPages.description,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Left,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@ExperimentalAnimationApi
-@Composable
-fun FinishButton(
-    modifier: Modifier,
-    pagerState: PagerState,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .padding(horizontal = 40.dp),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(),
-            visible = pagerState.currentPage == 6
-        ) {
-            Button(
-                onClick = onClick,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Start Selling")
-            }
-        }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun FirstOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.First)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun SecondOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.Second)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun ThirdOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.Third)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun FourthOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.Fourth)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun FifthOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.Fifth)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun SixthOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.Sixth)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun FinalOnBoardingScreenPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PagerScreen(onBoardingPages = OnBoardingPages.Final)
-    }
-}

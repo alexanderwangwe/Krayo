@@ -3,10 +3,9 @@ package com.krayo.art
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
@@ -23,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -45,13 +43,14 @@ import com.krayo.art.ui.screens.content_search.ContentSearchScreen
 import com.krayo.art.ui.screens.dashboard.DashboardScreen
 import com.krayo.art.ui.screens.discover.DiscoverScreen
 import com.krayo.art.ui.screens.home.HomeScreen
+import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
 import com.krayo.art.ui.screens.profile.ProfileScreen
 import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.theme.KrayoTheme
 
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -73,7 +72,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Destinations.ONBOARDING.name,
+                        startDestination = Destinations.ONBOARDINGPROCESS.name,
 
                         ) {
                         composable(route = Destinations.HOME.name) {
@@ -108,7 +107,12 @@ class MainActivity : ComponentActivity() {
                             ContentSearchScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.ONBOARDING.name) {
-                            OnboardingScreen()
+                            OnboardingScreen(navController, innerPadding)
+                        }
+                        composable(route = Destinations.ONBOARDINGPROCESS.name) {
+                            FirstOnboardingScreen(
+                                navController = navController, innerPadding
+                            )
                         }
                     }
                 }
