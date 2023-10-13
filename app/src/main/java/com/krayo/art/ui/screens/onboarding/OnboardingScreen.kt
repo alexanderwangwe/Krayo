@@ -2,6 +2,7 @@ package com.krayo.art.ui.screens.onboarding
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.absolutePadding
@@ -13,13 +14,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,29 +32,29 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.krayo.art.R
 import com.krayo.art.constants.Destinations
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(navController: NavController, paddingValues: PaddingValues) {
 
-    val navController = rememberNavController()
-
-    Surface(
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .absolutePadding(bottom = paddingValues.calculateBottomPadding()),
-        color = MaterialTheme.colorScheme.surface
-    ) {
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { padding ->
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        ){
             Text(
                 "Welcome to Krayo",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 153.dp),
-                style = MaterialTheme.typography.titleLarge,
+                    .padding(top = 140.dp),
+                style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center
@@ -59,61 +64,74 @@ fun OnboardingScreen(navController: NavController, paddingValues: PaddingValues)
                 text = "What are you trying to achieve?",
                 modifier = Modifier
                     .width(302.dp)
-
                     .padding(top = 104.dp),
-                style = MaterialTheme.typography.displaySmall,
+                style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontWeight = FontWeight(700),
 
             )
 
-            Button(
-                modifier = Modifier
-                    .border(
-                        width = 2.dp,
-                        color = Color(0xFFD9D9D9),
-                        shape = RoundedCornerShape(size = 15.dp)
-                    )
-                    .height(50.dp)
-                    .width(320.dp),
-                    //.padding(top = 90.dp),
+            Box(modifier = Modifier
+                .padding(top = 60.dp)
+            ){
+                Button(
+                    modifier = Modifier
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFFD9D9D9),
+                            shape = RoundedCornerShape(size = 15.dp)
+                        )
+                        .height(50.dp)
+                        .width(320.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
-                enabled = true,
-                onClick = {
-                    navController.navigate(Destinations.ONBOARDINGPROCESS.name)
-                },
-
-            ) {
-                Text(text = "Post and sell your creations")
-            }
-
-            Button(
-                modifier = Modifier
-                    .border(
-                        width = 2.dp,
-                        color = Color(0xFFD9D9D9),
-                        shape = RoundedCornerShape(size = 15.dp)
-                    )
-                    .height(50.dp)
-                    .width(320.dp),
-                    //.padding(top = 108.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                enabled = true,
-                onClick = {
-                    navController.navigate(Destinations.ONBOARDINGPROCESS.name)
-                },
+                    onClick = {
+                        navController.navigate(Destinations.ONBOARDING_PROCESS.name)
+                    }
 
                 ) {
-                Text(text = "Simply just post your artwork")
-                //Icon(painter = painterResource(id = R.drawable.carbon_next_outline),
-                //contentDescription = null)
+                    Text(
+                        text = "Post and sell your creations",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
-        }
 
+            Box(modifier = Modifier
+                .padding(top = 50.dp)
+            ){
+                Button(
+                    modifier = Modifier
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFFD9D9D9),
+                            shape = RoundedCornerShape(size = 15.dp)
+                        )
+                        .height(50.dp)
+                        .width(320.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    onClick = {
+                        navController.navigate(Destinations.ONBOARDING_BEGIN.name)
+                    },
+
+                    ) {
+                    Text(
+                        text = "Simply just post your artwork",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    /* Icon(
+                        painter = painterResource(id = R.drawable.carbon_next_outline),
+                        contentDescription = null
+                    ) */
+
+                }
+            }
+
+        }
 
     }
 }

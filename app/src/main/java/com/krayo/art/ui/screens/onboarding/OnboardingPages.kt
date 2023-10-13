@@ -4,15 +4,15 @@ import androidx.annotation.DrawableRes
 import com.krayo.art.R
 
 sealed class OnBoardingPages(
-    //@DrawableRes
-    //val image: Int,
+    @DrawableRes
+    val image: Int,
     val number: String,
     val type: String,
     val title: String,
     val description: String
 ) {
     object First : OnBoardingPages(
-        //image = R.drawable.,
+        image = R.drawable.content,
         number = "",
         type = "",
         title = "Earn more from your craft",
@@ -20,7 +20,7 @@ sealed class OnBoardingPages(
     )
 
     object Second : OnBoardingPages(
-        //image = R.drawable.second,
+        image = R.drawable.content,
         number = "",
         type = "",
         title = "Reach a global network",
@@ -28,7 +28,7 @@ sealed class OnBoardingPages(
     )
 
     object Third : OnBoardingPages(
-        //image = R.drawable.third,
+        image = R.drawable.content,
         number = "",
         type = "",
         title = "Connect with Fellow Artists",
@@ -36,7 +36,7 @@ sealed class OnBoardingPages(
     )
 
     object Fourth : OnBoardingPages(
-        //image = R.drawable.fourth,
+        image = R.drawable.content,
         number = "1",
         type = "How it Works",
         title = "Submit Your artwork",
@@ -44,7 +44,7 @@ sealed class OnBoardingPages(
     )
 
     object Fifth : OnBoardingPages(
-        //image = R.drawable.fifth,
+        image = R.drawable.content,
         number = "2",
         type = "How it Works",
         title = "Determine Your Sales Option",
@@ -52,7 +52,7 @@ sealed class OnBoardingPages(
     )
 
     object Sixth : OnBoardingPages(
-        //image = R.drawable.sixth,
+        image = R.drawable.content,
         number = "3",
         type = "How it Works",
         title = "Sell Your Artwork",
@@ -60,7 +60,7 @@ sealed class OnBoardingPages(
     )
 
     object Final : OnBoardingPages(
-        //image = R.drawable.final,
+        image = R.drawable.content,
         number = "4",
         type = "How it Works",
         title = "Review Your Insights",

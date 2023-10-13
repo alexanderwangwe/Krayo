@@ -3,7 +3,10 @@ package com.krayo.art.ui.screens.onboarding
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,29 +32,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.krayo.art.R
+import com.krayo.art.constants.Destinations
 import com.krayo.art.ui.screens.home.TopBar
+import kotlinx.coroutines.launch
 
 @OptIn( ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @ExperimentalAnimationApi
 @Composable
 fun FirstOnboardingScreen(
-    navController: NavHostController,
+    navController: NavController,
     paddingValues: PaddingValues
 ) {
     val pages = listOf(
@@ -63,8 +75,6 @@ fun FirstOnboardingScreen(
         OnBoardingPages.Final
     )
 
-    val navController = rememberNavController()
-
     var hideContent by remember {
         mutableStateOf(false)
     }
@@ -73,11 +83,21 @@ fun FirstOnboardingScreen(
         modifier = Modifier
             .fillMaxSize()
             .absolutePadding(bottom = paddingValues.calculateBottomPadding()),
-
+        containerColor = MaterialTheme.colorScheme.surface
     ) { padding ->
         val pagerState = rememberPagerState(
             pageCount =  pages.size
         )
+
+       /*
+           Box( modifier = Modifier.fillMaxSize()) {
+                Image(painter = painterResource(id = R.drawable.content),
+                    contentDescription = "Background Image",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        */
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -97,18 +117,58 @@ fun FirstOnboardingScreen(
                 PagerScreen(onBoardingPages = pages[currentPage])
             }
 
-
-            /*FinishButton(
-                modifier = Modifier.weight(1f),
-                pagerState = pagerState
-            ) {
-                /* welcomeViewModel.saveOnBoardingState(completed = true)
-                navController.popBackStack()
-                navController.navigate(Destinations.CONTENT_CREATION.name) */
-            }*/
+            ButtonSection(
+                pagerState = pagerState,
+                navController = navController
+            )
         }
     }
 
+}
+
+
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun ButtonSection(pagerState: PagerState, navController: NavController) {
+
+    val scope = rememberCoroutineScope()
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(30.dp)){
+        if (pagerState.currentPage != 6) {
+            Text(text = "Skip to End",
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .clickable {
+                        scope.launch {
+                            pagerState.scrollToPage(6)
+                        }
+                    },
+                color = Color(0xFF30D69A),
+                style = MaterialTheme.typography.bodyMedium,
+
+            )
+        }  else {
+            Button(
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(320.dp),
+                shape = RoundedCornerShape(size = 15.dp),
+                enabled = true,
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(Destinations.CONTENT_CREATION.name)
+                }) {
+                Text(
+                    text = "Start Selling",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -144,14 +204,14 @@ private fun IndicatorSingleDash(isSelected: Boolean) {
 }
 
 @Composable
-private fun PagerScreen(onBoardingPages: OnBoardingPages) {
-    /* Box( modifier = Modifier.fillMaxSize()) {
+fun PagerScreen(onBoardingPages: OnBoardingPages) {
+     Box( modifier = Modifier.fillMaxSize()) {
          Image(painter = painterResource(id = onBoardingPages.image),
              contentDescription = "Background Image",
              contentScale = ContentScale.FillBounds,
-             modifier = Modifier.matchParentSize()
+             modifier = Modifier.fillMaxSize()
          )
-     } */
+     }
 
     Column(
         modifier = Modifier
@@ -160,6 +220,7 @@ private fun PagerScreen(onBoardingPages: OnBoardingPages) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+
 
         Text(
             modifier = Modifier
@@ -178,27 +239,43 @@ private fun PagerScreen(onBoardingPages: OnBoardingPages) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 46.dp)
-                .padding(top = 120.dp),
-            text = onBoardingPages.title,
-            style = MaterialTheme.typography.displaySmall,
+                .padding(top = 80.dp),
+            text = onBoardingPages.number,
+            style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Left,
             color = MaterialTheme.colorScheme.onPrimary
 
         )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 46.dp)
+                .padding(top = 10.dp),
+            text = onBoardingPages.title,
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Left,
+            color = MaterialTheme.colorScheme.onPrimary
+
+        )
+
         Text(
             modifier = Modifier
                 .padding(horizontal = 40.dp)
-                .padding(top = 46.dp)
+                .padding(top = 40.dp)
                 .width(302.dp),
             text = onBoardingPages.description,
             //fontSize = 16.sp,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight(400),
             textAlign = TextAlign.Left,
             color = MaterialTheme.colorScheme.onPrimary
         )
+
     }
+
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
