@@ -1,5 +1,6 @@
 package com.krayo.art.ui.screens.onboarding
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -53,6 +54,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.krayo.art.MainActivity
 import com.krayo.art.R
 import com.krayo.art.constants.Destinations
 import com.krayo.art.ui.screens.home.TopBar
@@ -63,7 +65,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun FirstOnboardingScreen(
     navController: NavController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    context: MainActivity
 ) {
     val pages = listOf(
         OnBoardingPages.First,
@@ -119,7 +122,8 @@ fun FirstOnboardingScreen(
 
             ButtonSection(
                 pagerState = pagerState,
-                navController = navController
+                navController = navController,
+                context = context
             )
         }
     }
@@ -130,7 +134,7 @@ fun FirstOnboardingScreen(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ButtonSection(pagerState: PagerState, navController: NavController) {
+fun ButtonSection(pagerState: PagerState, navController: NavController, context: MainActivity) {
 
     val scope = rememberCoroutineScope()
 
@@ -158,6 +162,7 @@ fun ButtonSection(pagerState: PagerState, navController: NavController) {
                 shape = RoundedCornerShape(size = 15.dp),
                 enabled = true,
                 onClick = {
+                    onBoardingIsCompleted(context = context)
                     navController.popBackStack()
                     navController.navigate(Destinations.CONTENT_CREATION.name)
                 }) {
@@ -278,34 +283,11 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
 
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
-@ExperimentalAnimationApi
-@Composable
-private fun FinishButton(
-    modifier: Modifier,
-    pagerState: com.google.accompanist.pager.PagerState,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .padding(horizontal = 40.dp),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(),
-            visible = pagerState.currentPage == 6
-        ) {
-            Button(
-                onClick = onClick,
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Start Selling")
-            }
-        }
-    }
+private fun onBoardingIsCompleted(context : MainActivity) {
+    val sharedPreferences = context.getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+    val  editor = sharedPreferences.edit()
+    editor.putBoolean("isComplete", true)
+    editor.apply()
 }
 
 @Composable

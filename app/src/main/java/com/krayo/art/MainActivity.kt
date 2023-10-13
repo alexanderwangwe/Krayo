@@ -1,5 +1,6 @@
 package com.krayo.art
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -66,14 +67,14 @@ class MainActivity : ComponentActivity() {
                     containerColor = MaterialTheme.colorScheme.surface,
                     bottomBar = {
                         BottomNavigationBar(
-                            WindowInsets.navigationBars, navController = navController
+                            WindowInsets.navigationBars, navController = navController, context = this@MainActivity
                         )
                     },
                     contentWindowInsets = WindowInsets.statusBars
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Destinations.ONBOARDING.name,
+                        startDestination = Destinations.HOME.name,
 
                         ) {
                         composable(route = Destinations.HOME.name) {
@@ -84,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             DiscoverScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.CONTENT_CREATION.name) {
-                            ContentCreationScreen(navController, innerPadding)
+                            ContentCreationScreen(navController, innerPadding, context = this@MainActivity)
                         }
                         composable(route = Destinations.CHAT.name) {
                             CommunitiesScreen(navController, innerPadding)
@@ -108,11 +109,11 @@ class MainActivity : ComponentActivity() {
                             ContentSearchScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.ONBOARDING.name) {
-                            OnboardingScreen(navController, innerPadding)
+                            OnboardingScreen(navController, innerPadding, context = this@MainActivity)
                         }
                         composable(route = Destinations.ONBOARDING_PROCESS.name) {
                             FirstOnboardingScreen(
-                                navController = navController, innerPadding
+                                navController = navController, innerPadding, context = this@MainActivity
                             )
                         }
                         composable(route = Destinations.ONBOARDING_BEGIN.name) {
@@ -130,7 +131,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun BottomNavigationBar(
-    windowInsets: WindowInsets, modifier: Modifier = Modifier, navController: NavController
+    windowInsets: WindowInsets,
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    context: MainActivity
 ) {
     var bottomNavState by rememberSaveable {
         mutableStateOf(
@@ -181,7 +185,14 @@ private fun BottomNavigationBar(
             selected = bottomNavState == Destinations.CONTENT_CREATION.name,
             onClick = {
                 bottomNavState = Destinations.CONTENT_CREATION.name
-                navController.navigate(Destinations.CONTENT_CREATION.name)
+
+                if (onBoardingIsCompleted(context = context)){
+                    navController.popBackStack()
+                    navController.navigate(Destinations.CONTENT_CREATION.name)
+                } else {
+                    navController.navigate(Destinations.ONBOARDING.name)
+                }
+
             },
             icon = {
                 Icon(
@@ -215,4 +226,9 @@ private fun BottomNavigationBar(
             )
         }, colors = colors)
     }
+}
+
+private fun onBoardingIsCompleted(context : MainActivity):Boolean{
+    val sharedPreferences = context.getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+    return sharedPreferences.getBoolean("isCompleted", false)
 }

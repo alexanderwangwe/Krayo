@@ -12,9 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.krayo.art.MainActivity
 
 @Composable
-fun ContentCreationScreen(navController: NavController, paddingValues: PaddingValues){
+fun ContentCreationScreen(
+    navController: NavController,
+    paddingValues: PaddingValues,
+    context: MainActivity
+){
     Surface(
         modifier = Modifier
             .fillMaxSize(),
