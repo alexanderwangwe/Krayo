@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Destinations.ONBOARDING_BEGIN.name) {
                             OnboardingBegin(
-                                navController = navController, innerPadding
+                                navController = navController, innerPadding, context = this@MainActivity
                             )
                         }
                     }

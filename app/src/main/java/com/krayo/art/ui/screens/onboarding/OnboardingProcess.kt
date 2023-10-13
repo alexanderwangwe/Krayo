@@ -272,7 +272,6 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
                 .padding(top = 40.dp)
                 .width(302.dp),
             text = onBoardingPages.description,
-            //fontSize = 16.sp,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight(400),
             textAlign = TextAlign.Left,

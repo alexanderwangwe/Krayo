@@ -1,5 +1,6 @@
 package com.krayo.art.ui.screens.onboarding
 
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,11 +28,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.krayo.art.MainActivity
 import com.krayo.art.constants.Destinations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingBegin(navController: NavController, paddingValues: PaddingValues) {
+fun OnboardingBegin(
+    navController: NavController,
+    paddingValues: PaddingValues,
+    context: MainActivity
+) {
 
     Scaffold(
         modifier = Modifier
@@ -67,7 +73,6 @@ fun OnboardingBegin(navController: NavController, paddingValues: PaddingValues) 
                     .padding(top = 40.dp)
                     .width(302.dp),
                 text = "Kickstart your artistic journey with Krayo by creating your first post. With a pool of artists and art enthusiasts we hope to help you grow and make the most of your talent.",
-                //fontSize = 16.sp,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight(400),
                 textAlign = TextAlign.Left,
@@ -97,6 +102,7 @@ fun OnboardingBegin(navController: NavController, paddingValues: PaddingValues) 
                     shape = RoundedCornerShape(size = 15.dp),
                     enabled = true,
                     onClick = {
+                        onBoardingIsCompleted(context = context)
                         navController.popBackStack()
                         navController.navigate(Destinations.CONTENT_CREATION.name)
                     }) {
@@ -108,9 +114,14 @@ fun OnboardingBegin(navController: NavController, paddingValues: PaddingValues) 
                 }
             }
 
-
-
         }
 
     }
+}
+
+private fun onBoardingIsCompleted(context : MainActivity) {
+    val sharedPreferences = context.getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+    val  editor = sharedPreferences.edit()
+    editor.putBoolean("isComplete", true)
+    editor.apply()
 }
