@@ -1,4 +1,4 @@
 package com.krayo.art.ui.screens.authentication
 
-class AuthentificationViewModel {
+class AuthenticationViewModel {
 }

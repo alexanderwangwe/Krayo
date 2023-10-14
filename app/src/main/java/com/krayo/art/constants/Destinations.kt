@@ -4,6 +4,8 @@ enum class Destinations {
     HOME,
     DISCOVER,
     CONTENT_CREATION,
+    PRODUCT_CREATION,
+    ADD_PRODUCT,
     CHAT,
     PROFILE,
     ANALYTICS,
@@ -14,4 +16,8 @@ enum class Destinations {
     ONBOARDING,
     ONBOARDING_PROCESS,
     ONBOARDING_BEGIN
+    SEARCH_RESULTS,
+    ACCOUNT_CREATION,
+    EMAIL_VERIFICATION,
+    AUTH_SUCCESS,
 }

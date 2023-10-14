@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">Krayo</string>
 
-    // Bottom Navigation strings
+    // Navigation strings
     <string name="home">Home</string>
     <string name="discover">Discover</string>
     <string name="add">Add</string>
     <string name="chat">Chat</string>
     <string name="profile">Profile</string>
+    <string name="go_back">Go back</string>
+    <string name="continue_text">Continue</string>
+    <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
 
     // Home Screen strings
     <string name="logo">Krayo logo</string>
@@ -21,5 +25,38 @@
     <string name="share">Share</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    // Authentication strings
+    <string name="login">Login</string>
+    <string name="resend_email">Resend Email (%s seconds)</string>
+    <string name="email_example">joe@email.com</string>
+    <string name="account_important">An account unlocks more interactions, with creatives you love</string>
+    <string name="email_verification">Check your email %s for a verification code and enter it below</string>
+    <string name="email_verification_success">Congratulations and welcome to Krayo. You have been registered successfully</string>
+    <string name="auth_google">Continue with Google</string>
+    <string name="auth_apple">Continue with Apple</string>
+
+    // Content creation stings
+    <string name="add_sounds">Add Sounds</string>
+    <string name="add_effects">Add Effects</string>
+    <string name="effects">Effects</string>
+    <string name="upload">Upload</string>
+    <string name="permission_grant">Before you can use the camera, you need to grant permission.</string>
+    <string name="permission_denied">You denied the permission. In order for you to use the camera, you need to grant the permission.\n\nIf denied, you can grant the permission in the settings.</string>
+    <string name="grant_permission">Grant permission</string>
+
+    // Product creation strings
+    <string name="products">Products</string>
+    <string name="add_product">Add Product</string>
+    <string name="attach">Attach</string>
+    <string name="detach">Detach</string>
+    <string name="attach_photo">Attach Photo</string>
+    <string name="product_title">Product title</string>
+    <string name="product_price">Product Price</string>
+    <string name="currency">KES</string>
+    <string name="product_desc">Product Description</string>
+
+    // Dashboard strings
+    <string name="dashboard">Dashboard</string>
 
 </resources>
