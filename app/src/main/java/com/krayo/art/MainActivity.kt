@@ -1,12 +1,14 @@
 package com.krayo.art
 
-import SearchResultsScreen
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
+import SearchResultsScreen
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -51,14 +53,18 @@ import com.krayo.art.ui.screens.content_search.ContentSearchScreen
 import com.krayo.art.ui.screens.dashboard.DashboardScreen
 import com.krayo.art.ui.screens.discover.DiscoverScreen
 import com.krayo.art.ui.screens.home.HomeScreen
+import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
+import com.krayo.art.ui.screens.onboarding.OnboardingBegin
 import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.ProfileScreen
+import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.theme.KrayoTheme
 import java.io.File
 
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     private fun getOutputDirectory(): File {
         val mediaDir = externalMediaDirs.firstOrNull()?.let {
             File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
@@ -67,7 +73,6 @@ class MainActivity : ComponentActivity() {
         return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -182,6 +187,21 @@ class MainActivity : ComponentActivity() {
                                     showBottomNav = show
                                 })
                         }
+                        
+                        composable(route = Destinations.ONBOARDING.name) {
+                            OnboardingScreen(navController, innerPadding, context = this@MainActivity)
+                        }
+                        composable(route = Destinations.ONBOARDING_PROCESS.name) {
+                            FirstOnboardingScreen(
+                                navController = navController, innerPadding, context = this@MainActivity
+                            )
+                        }
+                        composable(route = Destinations.ONBOARDING_BEGIN.name) {
+                            OnboardingBegin(
+                                navController = navController, innerPadding, context = this@MainActivity
+                            )
+                        }
+
 
                         // AUTHENTICATION ROUTES
                         composable(route = Destinations.ACCOUNT_CREATION.name) {
@@ -212,8 +232,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun BottomNavigationBar(
+    windowInsets: WindowInsets,
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    context: MainActivity
     updateNavState: (Boolean) -> Unit,
-    windowInsets: WindowInsets, modifier: Modifier = Modifier, navController: NavController
 ) {
     var bottomNavState by rememberSaveable {
         mutableStateOf(
@@ -300,12 +323,11 @@ private fun BottomNavigationBar(
             onClick = {
                 updateNavState(true)
                 bottomNavState = Destinations.CONTENT_CREATION.name
-                navController.navigate(Destinations.CONTENT_CREATION.name) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
+                if (onBoardingIsCompleted(context = context)){
+                    navController.popBackStack()
+                    navController.navigate(Destinations.CONTENT_CREATION.name)
+                } else {
+                    navController.navigate(Destinations.ONBOARDING.name)
                 }
             },
             icon = {
@@ -363,4 +385,9 @@ private fun BottomNavigationBar(
             }, colors = colors
         )
     }
+}
+
+private fun onBoardingIsCompleted(context : MainActivity):Boolean{
+    val sharedPreferences = context.getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+    return sharedPreferences.getBoolean("isCompleted", false)
 }

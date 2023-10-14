@@ -26,14 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.krayo.art.MainActivity
 import com.krayo.art.ui.screens.content_creation.subscreens.ContentScreen
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentCreationScreen(
+    navController: NavController,
+    paddingValues: PaddingValues,
+    context: MainActivity,
     updateNavState: (Boolean) -> Unit,
-    navController: NavController, paddingValues: PaddingValues,
     getOutputDirectory: () -> File,
     ) {
     val outputDirectory = getOutputDirectory()
