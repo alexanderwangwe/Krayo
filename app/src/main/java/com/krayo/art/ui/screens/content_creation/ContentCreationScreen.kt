@@ -27,26 +27,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.krayo.art.ui.screens.content_creation.subscreens.ContentScreen
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentCreationScreen(
     updateNavState: (Boolean) -> Unit,
-    navController: NavController, paddingValues: PaddingValues
-) {
+    navController: NavController, paddingValues: PaddingValues,
+    getOutputDirectory: () -> File,
+    ) {
+    val outputDirectory = getOutputDirectory()
     var currentMode by rememberSaveable {
         mutableStateOf(ContentCreationMode.VIDEO)
     }
     updateNavState(false)
+    var showBottomBar by rememberSaveable {
+        mutableStateOf(true)
+    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.surface,
         bottomBar = {
-            ContentCreationBottomBar(
-                paddingValues = WindowInsets.navigationBars.asPaddingValues()
-            ) { mode: ContentCreationMode ->
-                currentMode = mode
+            if(showBottomBar){
+                ContentCreationBottomBar(
+                    paddingValues = WindowInsets.navigationBars.asPaddingValues()
+                ) { mode: ContentCreationMode ->
+                    currentMode = mode
+                }
             }
         },
     ) { paddingValues ->
@@ -63,15 +71,23 @@ fun ContentCreationScreen(
 
                 ContentCreationMode.VIDEO -> {
                     ContentScreen(
+                        outputDirectory = outputDirectory,
                         navController = navController,
-                        mode = currentMode
+                        mode = currentMode,
+                        updateBottomBarState = {
+                            showBottomBar = it
+                        }
                     )
                 }
 
                 ContentCreationMode.PHOTO -> {
                     ContentScreen(
+                        outputDirectory = outputDirectory,
                         navController = navController,
-                        mode = currentMode
+                        mode = currentMode,
+                        updateBottomBarState = {
+                            showBottomBar = it
+                        }
                     )
                 }
             }

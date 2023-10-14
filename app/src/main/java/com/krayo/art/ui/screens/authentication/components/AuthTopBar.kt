@@ -43,7 +43,7 @@ fun AuthTopBar(
             color = MaterialTheme.colorScheme.onBackground,
         ) {
             Icon(
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier
                     .padding(10.dp)
                     .size(15.dp),

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -47,6 +46,7 @@ import com.krayo.art.ui.screens.authentication.subscreens.AuthSuccessScreen
 import com.krayo.art.ui.screens.authentication.subscreens.EmailVerification
 import com.krayo.art.ui.screens.communities.CommunitiesScreen
 import com.krayo.art.ui.screens.content_creation.ContentCreationScreen
+import com.krayo.art.ui.screens.content_creation.subscreens.ContentCreationOptionsScreen
 import com.krayo.art.ui.screens.content_search.ContentSearchScreen
 import com.krayo.art.ui.screens.dashboard.DashboardScreen
 import com.krayo.art.ui.screens.discover.DiscoverScreen
@@ -55,9 +55,18 @@ import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.ProfileScreen
 import com.krayo.art.ui.theme.KrayoTheme
+import java.io.File
 
 
 class MainActivity : ComponentActivity() {
+    private fun getOutputDirectory(): File {
+        val mediaDir = externalMediaDirs.firstOrNull()?.let {
+            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
+        }
+
+        return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -97,7 +106,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Destinations.DASHBOARD.name,
+                        startDestination = Destinations.HOME.name,
 
                         ) {
                         composable(route = Destinations.HOME.name) {
@@ -114,7 +123,12 @@ class MainActivity : ComponentActivity() {
                         composable(route = Destinations.CONTENT_CREATION.name) {
                             ContentCreationScreen(updateNavState = { show ->
                                 showBottomNav = show
-                            }, navController, innerPadding)
+                            }, navController, innerPadding){
+                                getOutputDirectory()
+                            }
+                        }
+                        composable(route = Destinations.CONTENT_CREATION_OPTIONS.name) {
+                            ContentCreationOptionsScreen(navController, innerPadding)
                         }
 
                         // PRODUCT CREATION ROUTES
@@ -188,7 +202,6 @@ class MainActivity : ComponentActivity() {
                                 navController, innerPadding,
                             )
                         }
-
                     }
                 }
 
@@ -213,14 +226,13 @@ private fun BottomNavigationBar(
     val colors = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.primary,
         unselectedIconColor = Color.White,
-        indicatorColor = MaterialTheme.colorScheme.background,
+        indicatorColor = Color.Transparent,
     )
 
     NavigationBar(
         modifier = modifier
-            .padding(top = 5.dp)
             .height(
-                50.dp + windowInsets
+                55.dp + windowInsets
                     .asPaddingValues()
                     .calculateBottomPadding()
             )
@@ -233,7 +245,6 @@ private fun BottomNavigationBar(
                 )
             ),
         containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.primary,
         tonalElevation = 0.dp,
         windowInsets = windowInsets
     ) {

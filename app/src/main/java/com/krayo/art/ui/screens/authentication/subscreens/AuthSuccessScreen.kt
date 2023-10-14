@@ -131,7 +131,7 @@ fun AuthSuccessTopBar(
             color = MaterialTheme.colorScheme.onBackground,
         ) {
             Icon(
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = modifier
                     .size(35.dp),
                 painter = painterResource(id = R.drawable.cancel),
