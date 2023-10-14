@@ -4,6 +4,7 @@ enum class Destinations {
     HOME,
     DISCOVER,
     CONTENT_CREATION,
+    CONTENT_CREATION_OPTIONS,
     PRODUCT_CREATION,
     ADD_PRODUCT,
     CHAT,

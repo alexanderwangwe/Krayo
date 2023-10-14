@@ -195,7 +195,7 @@ fun Comment(
                     Icon(
                         painter = painterResource(id = R.drawable.heart),
                         contentDescription = stringResource(id = R.string.like),
-                        tint = MaterialTheme.colorScheme.onPrimary,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .size(20.dp)
                             .clickable {
@@ -226,7 +226,7 @@ fun Comments(
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                 fontFamily = fontFamilyBold,
             ),
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .padding(15.dp)
         )
@@ -345,7 +345,7 @@ fun TopBar(
         Icon(
             painter = painterResource(id = R.drawable.alarm),
             contentDescription = stringResource(id = R.string.search),
-            tint = MaterialTheme.colorScheme.onPrimary,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.width(25.dp)
                 .height(25.dp)
                 .clickable {
@@ -371,7 +371,7 @@ fun TopBar(
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         fontFamily = if (condition) fontFamilyBold else fontFamilyLight,
                     ),
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .clickable {
                             preference = Preference.FOR_YOU
@@ -381,7 +381,7 @@ fun TopBar(
             Icon(
                 painter = painterResource(id = R.drawable.resource__),
                 contentDescription = stringResource(id = R.string.search),
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .padding(10.dp)
             )
@@ -394,7 +394,7 @@ fun TopBar(
                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                     fontFamily = if (condition2) fontFamilyBold else fontFamilyLight,
                 ),
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .clickable {
                         preference = Preference.FOLLOWING
@@ -404,7 +404,7 @@ fun TopBar(
         Icon(
             painter = painterResource(id = R.drawable.search),
             contentDescription = stringResource(id = R.string.search),
-            tint = MaterialTheme.colorScheme.onPrimary,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.width(25.dp)
                 .height(25.dp)
                 .clickable {

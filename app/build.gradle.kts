@@ -79,7 +79,11 @@ dependencies {
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
+    implementation("io.coil-kt:coil-compose:1.4.0")
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+
+    implementation("androidx.cardview:cardview:1.0.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
