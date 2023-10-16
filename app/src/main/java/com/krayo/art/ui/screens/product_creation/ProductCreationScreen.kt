@@ -101,7 +101,7 @@ private fun ProductCreationTopBar(
     modifier: Modifier,
     paddingValues: PaddingValues
 ) {
-    TopAppBar(modifier = modifier.padding(horizontal = 15.dp), navigationIcon = {
+    TopAppBar(modifier = modifier.padding(horizontal = 12.5.dp), navigationIcon = {
         Surface(
             modifier = Modifier
                 .clip(CircleShape)

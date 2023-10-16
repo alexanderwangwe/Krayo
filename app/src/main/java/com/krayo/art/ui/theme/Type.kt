@@ -88,6 +88,13 @@ val Typography = Typography(
         lineHeight = 48.sp,
         letterSpacing = 0.sp
     ),
+    headlineSmall = TextStyle(
+        fontFamily = fontFamilyLight,
+        fontWeight = FontWeight.Light,
+        fontSize = 24.sp,
+        lineHeight = 36.sp,
+        letterSpacing = 0.sp
+    ),
     displayMedium = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
@@ -95,6 +102,4 @@ val Typography = Typography(
         lineHeight = 36.sp,
         letterSpacing = 0.sp
     )
-
-
 )

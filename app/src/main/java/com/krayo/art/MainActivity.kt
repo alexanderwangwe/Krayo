@@ -1,14 +1,14 @@
 package com.krayo.art
 
+import SearchResultsScreen
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
-import SearchResultsScreen
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -55,10 +55,10 @@ import com.krayo.art.ui.screens.discover.DiscoverScreen
 import com.krayo.art.ui.screens.home.HomeScreen
 import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
 import com.krayo.art.ui.screens.onboarding.OnboardingBegin
+import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.ProfileScreen
-import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.theme.KrayoTheme
 import java.io.File
 
@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
         return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
     }
 
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -97,7 +98,9 @@ class MainActivity : ComponentActivity() {
                                         updateNavState = { show ->
                                             showBottomNav = show
                                         },
-                                        WindowInsets.navigationBars, navController = navController
+                                        windowInsets = WindowInsets.navigationBars,
+                                        navController = navController,
+                                        context = this@MainActivity
                                     )
                                 }
 
@@ -126,9 +129,14 @@ class MainActivity : ComponentActivity() {
 
                         // CONTENT CREATION ROUTES
                         composable(route = Destinations.CONTENT_CREATION.name) {
-                            ContentCreationScreen(updateNavState = { show ->
-                                showBottomNav = show
-                            }, navController, innerPadding){
+                            ContentCreationScreen(
+                                updateNavState = { show ->
+                                    showBottomNav = show
+                                },
+                                navController = navController,
+                                paddingValues = innerPadding,
+                                context = this@MainActivity
+                            ) {
                                 getOutputDirectory()
                             }
                         }
@@ -187,9 +195,11 @@ class MainActivity : ComponentActivity() {
                                     showBottomNav = show
                                 })
                         }
-                        
+
                         composable(route = Destinations.ONBOARDING.name) {
-                            OnboardingScreen(navController, innerPadding, context = this@MainActivity)
+                            OnboardingScreen(navController, innerPadding, context = this@MainActivity, updateNavState = { show ->
+                                showBottomNav = show
+                            })
                         }
                         composable(route = Destinations.ONBOARDING_PROCESS.name) {
                             FirstOnboardingScreen(
@@ -235,7 +245,7 @@ private fun BottomNavigationBar(
     windowInsets: WindowInsets,
     modifier: Modifier = Modifier,
     navController: NavController,
-    context: MainActivity
+    context: MainActivity,
     updateNavState: (Boolean) -> Unit,
 ) {
     var bottomNavState by rememberSaveable {
@@ -249,7 +259,7 @@ private fun BottomNavigationBar(
     val colors = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.primary,
         unselectedIconColor = Color.White,
-        indicatorColor = Color.Transparent,
+        indicatorColor = MaterialTheme.colorScheme.background,
     )
 
     NavigationBar(
@@ -319,15 +329,22 @@ private fun BottomNavigationBar(
             }, colors = colors
         )
         NavigationBarItem(
-            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CONTENT_CREATION.name } == true,
+            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CONTENT_CREATION.name || it.route == Destinations.ONBOARDING.name } == true,
             onClick = {
-                updateNavState(true)
-                bottomNavState = Destinations.CONTENT_CREATION.name
-                if (onBoardingIsCompleted(context = context)){
-                    navController.popBackStack()
-                    navController.navigate(Destinations.CONTENT_CREATION.name)
+                if (onBoardingIsCompleted(context = context)) {
+                    updateNavState(false)
+                    bottomNavState = Destinations.CONTENT_CREATION.name
+                    navController.popBackStack(Destinations.CONTENT_CREATION.name, false)
                 } else {
-                    navController.navigate(Destinations.ONBOARDING.name)
+                    updateNavState(false)
+                    bottomNavState = Destinations.ONBOARDING.name
+                    navController.navigate(Destinations.ONBOARDING.name) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             },
             icon = {

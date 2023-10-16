@@ -72,6 +72,8 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.krayo.art.R
 import com.krayo.art.constants.Destinations
 import com.krayo.art.ui.screens.content_creation.ContentCreationMode
+import com.krayo.art.ui.theme.DeepRed
+import com.krayo.art.ui.theme.LightText
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -429,7 +431,7 @@ private fun CaptureButton(
     onClick: (Uri) -> Unit = {}
 ) {
     val color = when (mode) {
-        ContentCreationMode.VIDEO -> Color.Red
+        ContentCreationMode.VIDEO -> DeepRed
         ContentCreationMode.PHOTO -> Color.White
         else -> Color.White
     }
@@ -542,6 +544,7 @@ private fun LastPhotoPreview(
                     modifier = Modifier.weight(1f).padding(start = 7.5.dp)
                 ) {
                     Text(
+                        color = Color.Black,
                         text = stringResource(id = R.string.next),
                         style = MaterialTheme.typography.bodyLarge
                     )

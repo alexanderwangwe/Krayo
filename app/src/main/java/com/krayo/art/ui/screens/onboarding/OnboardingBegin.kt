@@ -1,7 +1,6 @@
 package com.krayo.art.ui.screens.onboarding
 
 import android.content.Context
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,10 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.krayo.art.MainActivity
 import com.krayo.art.constants.Destinations
+import com.krayo.art.ui.screens.onboarding.components.OnboardingTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,79 +35,80 @@ fun OnboardingBegin(
     paddingValues: PaddingValues,
     context: MainActivity
 ) {
-
     Scaffold(
+        topBar = {
+            OnboardingTopBar(navController = navController)
+        },
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize().padding(horizontal = 15.dp)
             .absolutePadding(bottom = paddingValues.calculateBottomPadding()),
         containerColor = MaterialTheme.colorScheme.surface
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(),
-
+                .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 46.dp)
-                    .padding(top = 190.dp),
-                text = "Begin Your Journey",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Left,
-                color = MaterialTheme.colorScheme.onPrimary
-
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 46.dp)
-                    .padding(top = 40.dp)
-                    .width(302.dp),
-                text = "Kickstart your artistic journey with Krayo by creating your first post. With a pool of artists and art enthusiasts we hope to help you grow and make the most of your talent.",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight(400),
-                textAlign = TextAlign.Left,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-
-            Text(text = "Why choose to also sell ?",
-                modifier = Modifier
-                    .padding(top = 55.dp)
-                    .clickable {
-                        navController.navigate(Destinations.ONBOARDING_PROCESS.name)
-                    },
-                textAlign = TextAlign.Center,
-                color = Color(0xFF30D69A),
-                style = MaterialTheme.typography.bodyMedium,
-
-            )
-
-            Box(modifier = Modifier
-                .padding(top = 120.dp)
-            ){
-                Button(
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
                     modifier = Modifier
-                        .height(50.dp)
-                        .width(320.dp)
-                    ,
-                    shape = RoundedCornerShape(size = 15.dp),
-                    enabled = true,
-                    onClick = {
-                        onBoardingIsCompleted(context = context)
-                        navController.popBackStack()
-                        navController.navigate(Destinations.CONTENT_CREATION.name)
-                    }) {
+                        .fillMaxWidth()
+                        .padding(top = 50.dp),
+                    text = "Begin Your Journey",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    color = MaterialTheme.colorScheme.onPrimary
+
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(top = 40.dp),
+                    text = "Kickstart your artistic journey with Krayo by creating your first post. With a pool of artists and art enthusiasts we hope to help you grow and make the most of your talent.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Left,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+
+            Box(
+                modifier = Modifier.padding(bottom = 25.dp + padding.calculateBottomPadding()),
+            ) {
+                Column {
                     Text(
-                        text = "Create Post",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Black
-                    )
+                        text = "Why choose to also sell ?",
+                        modifier = Modifier
+                            .padding(bottom = 15.dp)
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(Destinations.ONBOARDING_PROCESS.name)
+                            },
+                        textAlign = TextAlign.Center,
+                        color = Color(0xFF30D69A),
+                        style = MaterialTheme.typography.bodyMedium,
+
+                        )
+
+                    Button(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(),
+                        enabled = true,
+                        onClick = {
+                            onBoardingIsCompleted(context = context)
+                            navController.popBackStack()
+                            navController.navigate(Destinations.CONTENT_CREATION.name)
+                        }) {
+                        Text(
+                            text = "Create Post",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.Black
+                        )
+                    }
                 }
             }
 

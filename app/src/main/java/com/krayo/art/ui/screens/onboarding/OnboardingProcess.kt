@@ -1,12 +1,8 @@
 package com.krayo.art.ui.screens.onboarding
 
 import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,10 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -33,23 +28,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -57,8 +48,6 @@ import com.google.accompanist.pager.rememberPagerState
 import com.krayo.art.MainActivity
 import com.krayo.art.R
 import com.krayo.art.constants.Destinations
-import com.krayo.art.ui.screens.home.TopBar
-import kotlinx.coroutines.launch
 
 @OptIn( ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @ExperimentalAnimationApi
@@ -75,6 +64,7 @@ fun FirstOnboardingScreen(
         OnBoardingPages.Fourth,
         OnBoardingPages.Fifth,
         OnBoardingPages.Sixth,
+        OnBoardingPages.Seventh,
         OnBoardingPages.Final
     )
 
@@ -102,20 +92,25 @@ fun FirstOnboardingScreen(
             }
         */
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 15.dp)
+            .padding(padding)) {
 
             PageIndicator(
                 pageCount = pages.size,
                 currentPage = pagerState.currentPage,
                 modifier = Modifier
-                    .padding(top = 60.dp)
                     .align(alignment = Alignment.CenterHorizontally)
+                    .padding(top = 15.dp),
+                navController = navController
             )
 
             HorizontalPager(
                 modifier = Modifier.weight(10f),
                 state = pagerState,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) { currentPage ->
                 PagerScreen(onBoardingPages = pages[currentPage])
             }
@@ -123,73 +118,76 @@ fun FirstOnboardingScreen(
             ButtonSection(
                 pagerState = pagerState,
                 navController = navController,
-                context = context
+                context = context,
+                padding = padding
             )
         }
     }
 
 }
-
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ButtonSection(pagerState: PagerState, navController: NavController, context: MainActivity) {
-
-    val scope = rememberCoroutineScope()
-
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(30.dp)){
-        if (pagerState.currentPage != 6) {
-            Text(text = "Skip to End",
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .clickable {
-                        scope.launch {
-                            pagerState.scrollToPage(6)
-                        }
-                    },
-                color = Color(0xFF30D69A),
-                style = MaterialTheme.typography.bodyMedium,
-
-            )
-        }  else {
-            Button(
-                modifier = Modifier
-                    .height(50.dp)
-                    .width(320.dp),
-                shape = RoundedCornerShape(size = 15.dp),
-                enabled = true,
-                onClick = {
-                    onBoardingIsCompleted(context = context)
-                    navController.popBackStack()
-                    navController.navigate(Destinations.CONTENT_CREATION.name)
-                }) {
-                Text(
-                    text = "Start Selling",
+fun ButtonSection(
+    pagerState: PagerState,
+    padding: PaddingValues,
+    navController: NavController,
+    context: MainActivity
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = padding.calculateBottomPadding())
+    ) {
+        Button(
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth(),
+            enabled = true,
+            onClick = {
+                onBoardingIsCompleted(context = context)
+                navController.navigate(Destinations.CONTENT_CREATION.name)
+            }) {
+            Text(
+                text = "Start Selling",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black
                 )
             }
-        }
     }
 }
 
 @Composable
-private fun PageIndicator(pageCount: Int, currentPage: Int, modifier: Modifier) {
+private fun PageIndicator(navController: NavController, pageCount: Int, currentPage: Int, modifier: Modifier) {
+    Row(
+        modifier = modifier.height(47.5.dp)
+    ){
+        Icon(
+            modifier = Modifier.height(40.dp).padding(horizontal = 5.dp).clickable {
+                navController.popBackStack()
+            },
+            tint = MaterialTheme.colorScheme.onSurface,
+            painter = painterResource(id = R.drawable.cancel),
+            contentDescription = stringResource(
+                id = R.string.go_back
+            )
+        )
 
-    Row (
-        horizontalArrangement =
+        Row (
+            modifier = modifier.weight(1f),
+            horizontalArrangement =
             Arrangement.spacedBy(0.dp,
-            Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.Top,
-        modifier = modifier
-    ) {
-        repeat(pageCount){
-            IndicatorSingleDash(isSelected = it == currentPage )
+                Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.Top,
+        ) {
+
+            repeat(pageCount){
+                IndicatorSingleDash(isSelected = it == currentPage )
+            }
         }
     }
+
 }
 
 @Composable
@@ -202,7 +200,7 @@ private fun IndicatorSingleDash(isSelected: Boolean) {
         .height(4.dp)
         .clip(CircleShape)
         .background(
-            if (isSelected) Color(0xFF30D69A) else Color(0xFFD9D9D9),
+            if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onBackground,
             shape = RoundedCornerShape(size = 2.dp)
         )
     )
@@ -210,41 +208,24 @@ private fun IndicatorSingleDash(isSelected: Boolean) {
 
 @Composable
 fun PagerScreen(onBoardingPages: OnBoardingPages) {
-     Box( modifier = Modifier.fillMaxSize()) {
-         Image(painter = painterResource(id = onBoardingPages.image),
-             contentDescription = "Background Image",
-             contentScale = ContentScale.FillBounds,
-             modifier = Modifier.fillMaxSize()
-         )
-     }
+//     Box( modifier = Modifier.fillMaxSize()) {
+//         Image(painter = painterResource(id = onBoardingPages.image),
+//             contentDescription = "Background Image",
+//             contentScale = ContentScale.FillBounds,
+//             modifier = Modifier.fillMaxSize()
+//         )
+//     }
 
     Column(
         modifier = Modifier
             .fillMaxWidth(),
-
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
 
-
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 46.dp)
-                .padding(top = 36.dp),
-            text = onBoardingPages.type,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onPrimary
-
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 46.dp)
-                .padding(top = 80.dp),
+                .fillMaxWidth(),
             text = onBoardingPages.number,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
@@ -255,9 +236,17 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
 
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 46.dp)
-                .padding(top = 10.dp),
+                .fillMaxWidth(),
+            text = onBoardingPages.type,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimary
+
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = onBoardingPages.title,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
@@ -267,10 +256,6 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
         )
 
         Text(
-            modifier = Modifier
-                .padding(horizontal = 40.dp)
-                .padding(top = 40.dp)
-                .width(302.dp),
             text = onBoardingPages.description,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight(400),
@@ -334,6 +319,14 @@ fun FifthOnBoardingScreenPreview() {
 fun SixthOnBoardingScreenPreview() {
     Column(modifier = Modifier.fillMaxSize()) {
         PagerScreen(onBoardingPages = OnBoardingPages.Sixth)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun SeventhOnBoardingScreenPreview() {
+    Column(modifier = Modifier.fillMaxSize()) {
+        PagerScreen(onBoardingPages = OnBoardingPages.Seventh)
     }
 }
 

@@ -67,7 +67,7 @@ fun ContentCreationOptionsScreen(
                     Surface(
                         modifier = Modifier
                             .clip(CircleShape)
-                            .height(35.dp)
+                            .height(40.dp)
                             .clickable {
                                 navController.popBackStack()
                             },

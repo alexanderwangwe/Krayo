@@ -83,6 +83,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.accompanist:accompanist-pager:0.13.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.13.0")
 
 
     testImplementation("junit:junit:4.13.2")

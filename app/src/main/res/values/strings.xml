@@ -52,6 +52,7 @@
     // Product creation strings
     <string name="products">Products</string>
     <string name="add_product">Add Product</string>
+    <string name="create_product">Create Product</string>
     <string name="attach">Attach</string>
     <string name="detach">Detach</string>
     <string name="attach_product">Attach Product</string>
@@ -66,5 +67,9 @@
 
     // Content Creation Options Screen
     <string name="create">Create</string>
+
+    // Profile
+    <string name="edit_profile">Edit Profile</string>
+    <string name="no_item_image">Camera image with a strike through</string>
 
 </resources>
