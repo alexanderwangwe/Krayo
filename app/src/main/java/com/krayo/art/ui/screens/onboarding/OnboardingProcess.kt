@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -164,7 +165,7 @@ private fun PageIndicator(navController: NavController, pageCount: Int, currentP
         modifier = modifier.height(47.5.dp)
     ){
         Icon(
-            modifier = Modifier.height(40.dp).padding(horizontal = 5.dp).clickable {
+            modifier = Modifier.size(35.dp).clickable {
                 navController.popBackStack()
             },
             tint = MaterialTheme.colorScheme.onSurface,
@@ -230,8 +231,6 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Left,
-            color = MaterialTheme.colorScheme.onPrimary
-
         )
 
         Text(
@@ -240,8 +239,6 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
             text = onBoardingPages.type,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
-
         )
 
         Text(
@@ -251,8 +248,6 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Left,
-            color = MaterialTheme.colorScheme.onPrimary
-
         )
 
         Text(
@@ -260,7 +255,6 @@ fun PagerScreen(onBoardingPages: OnBoardingPages) {
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight(400),
             textAlign = TextAlign.Left,
-            color = MaterialTheme.colorScheme.onPrimary
         )
 
     }

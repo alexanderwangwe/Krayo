@@ -163,7 +163,7 @@ private fun Product(
         painterResource(id = R.drawable.plus_math)
     }
     val color = if (isAttached) {
-        MaterialTheme.colorScheme.error
+        MaterialTheme.colorScheme.tertiary
     } else {
         MaterialTheme.colorScheme.primary
     }

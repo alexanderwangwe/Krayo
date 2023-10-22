@@ -33,6 +33,16 @@ private val LightColorScheme = lightColorScheme(
     onSurface = LightText,
     onBackground = Grey60,
 
+    // Actual light mode values, uncomment to use and comment the above
+//    primary = Purple20,
+//    secondary = Green20,
+//    tertiary = Red20,
+//    background = Grey40,
+//    surface = LightGrey,
+//    error = Red80,
+//    onSurface = DarkText,
+//    onBackground = Grey20,
+
     /* Other default colors to override
 
     surface = Color(0xFFFFFBFE),
@@ -66,7 +76,7 @@ fun KrayoTheme(
             val window = (view.context as Activity).window
             window.statusBarColor = Color.Transparent.toArgb()
             window.navigationBarColor = Dark100.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 

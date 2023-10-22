@@ -2,6 +2,7 @@ package com.krayo.art.ui.screens.onboarding.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +22,7 @@ fun OnboardingTopBar(
 ) {
     TopAppBar(title = { /*TODO*/ }, navigationIcon = {
         Icon(
-            modifier = Modifier.height(40.dp).clickable {
+            modifier = Modifier.size(35.dp).clickable {
                 navController.popBackStack()
             },
             tint = MaterialTheme.colorScheme.onSurface,

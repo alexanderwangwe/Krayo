@@ -52,7 +52,7 @@ fun AuthSuccessScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(paddingValues)
+                .padding(top = paddingValues.calculateTopPadding())
                 .padding(horizontal = 15.dp, vertical = 50.dp)
         ) {
             InfoSection()
@@ -128,7 +128,7 @@ fun AuthSuccessTopBar(
                 .clickable {
                     navController.popBackStack(Destinations.HOME.name, false)
                 },
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.surface,
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.onSurface,

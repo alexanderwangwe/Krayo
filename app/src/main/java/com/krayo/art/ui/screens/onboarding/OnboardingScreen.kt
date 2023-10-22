@@ -66,15 +66,10 @@ fun OnboardingScreen(
                     .padding(top = 50.dp)
                     .weight(1f),
             ) {
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = "Hey there!",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
+
                 Text(
                     textAlign = TextAlign.Start,
-                    text = "What are you trying to achieve on Krayo?",
+                    text = "Hey there! What are you trying to achieve on Krayo?",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -125,10 +120,12 @@ fun OnboardingScreen(
 
                         ) {
                         Text(
+                            color = MaterialTheme.colorScheme.onSurface,
                             text = "Just post your creations",
                             style = MaterialTheme.typography.bodyLarge,
                         )
                         Icon(
+                            tint = MaterialTheme.colorScheme.onSurface,
                             painter = painterResource(id = R.drawable.navigate_next_24),
                             contentDescription = stringResource(
                                 id = R.string.next
@@ -141,5 +138,3 @@ fun OnboardingScreen(
 
     }
 }
-
-

@@ -64,7 +64,6 @@ fun SearchTopBar(
             color = MaterialTheme.colorScheme.onBackground,
         ) {
             Icon(
-                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = modifier
                     .padding(10.dp)
                     .size(15.dp),
