@@ -50,7 +50,7 @@ fun ContentCreationScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = Color.Black,
         bottomBar = {
             if(showBottomBar){
                 ContentCreationBottomBar(
@@ -116,8 +116,7 @@ private fun ContentCreationBottomBar(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(75.dp)
+            .fillMaxWidth().padding(vertical = 25.dp)
             .padding(paddingValues),
     ) {
         Text(

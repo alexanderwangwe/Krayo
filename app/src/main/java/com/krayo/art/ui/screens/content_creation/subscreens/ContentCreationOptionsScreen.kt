@@ -210,7 +210,7 @@ private fun ContentDescription(
 private fun Product() {
     val attachText = stringResource(id = R.string.detach)
     val attachIcon = painterResource(id = R.drawable.icon_remove)
-    val color = MaterialTheme.colorScheme.error
+    val color = MaterialTheme.colorScheme.tertiary
     Row(
         modifier = Modifier
             .fillMaxWidth()

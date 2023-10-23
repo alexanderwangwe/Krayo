@@ -11,6 +11,7 @@
     <string name="continue_text">Continue</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 
     // Home Screen strings
     <string name="logo">Krayo logo</string>
@@ -64,6 +65,12 @@
 
     // Dashboard strings
     <string name="dashboard">Dashboard</string>
+    <string name="pending_order">Pending Order</string>
+    <string name="ongoing_order">Ongoing Order</string>
+    <string name="dispatch_order">Dispatch Order</string>
+    <string name="cancel_order">Cancel Order</string>
+    <string name="ongoing_order_progress">Order in progress</string>
+    <string name="dispatch_success">Order dispatched successfully. A courier will contact you to pick up the item shortly</string>
 
     // Content Creation Options Screen
     <string name="create">Create</string>

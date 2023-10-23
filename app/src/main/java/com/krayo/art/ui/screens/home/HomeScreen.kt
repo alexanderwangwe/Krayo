@@ -345,7 +345,7 @@ fun TopBar(
         Icon(
             painter = painterResource(id = R.drawable.alarm),
             contentDescription = stringResource(id = R.string.search),
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = Color.White,
             modifier = Modifier.width(25.dp)
                 .height(25.dp)
                 .clickable {
@@ -371,7 +371,7 @@ fun TopBar(
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         fontFamily = if (condition) fontFamilyBold else fontFamilyLight,
                     ),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.White,
                     modifier = Modifier
                         .clickable {
                             preference = Preference.FOR_YOU
@@ -381,7 +381,7 @@ fun TopBar(
             Icon(
                 painter = painterResource(id = R.drawable.resource__),
                 contentDescription = stringResource(id = R.string.search),
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = Color.White,
                 modifier = Modifier
                     .padding(10.dp)
             )
@@ -394,7 +394,7 @@ fun TopBar(
                     fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                     fontFamily = if (condition2) fontFamilyBold else fontFamilyLight,
                 ),
-                color = MaterialTheme.colorScheme.onSurface,
+                color = Color.White,
                 modifier = Modifier
                     .clickable {
                         preference = Preference.FOLLOWING
@@ -404,7 +404,7 @@ fun TopBar(
         Icon(
             painter = painterResource(id = R.drawable.search),
             contentDescription = stringResource(id = R.string.search),
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = Color.White,
             modifier = Modifier.width(25.dp)
                 .height(25.dp)
                 .clickable {

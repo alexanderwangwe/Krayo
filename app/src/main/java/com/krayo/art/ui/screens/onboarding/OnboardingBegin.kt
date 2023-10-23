@@ -61,8 +61,6 @@ fun OnboardingBegin(
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Left,
-                    color = MaterialTheme.colorScheme.onPrimary
-
                 )
 
                 Text(
@@ -71,12 +69,11 @@ fun OnboardingBegin(
                     text = "Kickstart your artistic journey with Krayo by creating your first post. With a pool of artists and art enthusiasts we hope to help you grow and make the most of your talent.",
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Left,
-                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
             Box(
-                modifier = Modifier.padding(bottom = 25.dp + padding.calculateBottomPadding()),
+                modifier = Modifier.padding(bottom = padding.calculateBottomPadding()),
             ) {
                 Column {
                     Text(
@@ -88,7 +85,7 @@ fun OnboardingBegin(
                                 navController.navigate(Destinations.ONBOARDING_PROCESS.name)
                             },
                         textAlign = TextAlign.Center,
-                        color = Color(0xFF30D69A),
+                        color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.bodyMedium,
 
                         )

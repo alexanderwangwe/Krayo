@@ -166,6 +166,7 @@ private fun ContentCreationTopBar(
             .padding(horizontal = 15.dp),
     ) {
         Icon(
+            tint = Color.White,
             modifier = Modifier
                 .size(30.dp)
                 .clickable {
@@ -181,15 +182,15 @@ private fun ContentCreationTopBar(
         )
         Button(colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
-            contentColor = MaterialTheme.colorScheme.onSurface
+            contentColor = Color.White
         ), onClick = { /*TODO*/ }) {
             Text(
                 text = stringResource(id = R.string.add_sounds),
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 15.sp
             )
         }
         Icon(
+            tint = Color.White,
             modifier = Modifier.size(30.dp).clickable {
                 onCameraFlip()
             },
@@ -207,15 +208,12 @@ private fun ContentCreationBottomBar(
     executor: Executor,
     imageCapture: ImageCapture,
     mode: ContentCreationMode,
-    paddingValues: PaddingValues,
     onCapture: (Uri) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(paddingValues)
-            .padding(horizontal = 15.dp),
+            .fillMaxWidth().padding(15.dp),
         verticalAlignment = Alignment.Bottom,
     ) {
         Column(
@@ -223,6 +221,7 @@ private fun ContentCreationBottomBar(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
+                tint = Color.White,
                 modifier = Modifier.size(40.dp),
                 painter = painterResource(id = R.drawable.round_layers_24),
                 contentDescription = stringResource(
@@ -231,8 +230,9 @@ private fun ContentCreationBottomBar(
             )
             Text(
                 text = stringResource(id = R.string.effects),
+                color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 15.sp
+                fontSize = 14.sp
             )
         }
 
@@ -251,7 +251,7 @@ private fun ContentCreationBottomBar(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Surface(
-                color = MaterialTheme.colorScheme.onSurface,
+                color = Color.White,
                 modifier = Modifier
                     .size(35.dp)
                     .clip(RoundedCornerShape(10.dp))
@@ -259,9 +259,10 @@ private fun ContentCreationBottomBar(
                 // TODO: Add latest image here
             }
             Text(
+                color = Color.White,
                 text = stringResource(id = R.string.upload),
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 15.sp
+                fontSize = 14.sp
             )
         }
     }
@@ -371,7 +372,6 @@ private fun CameraPreview(
             imageCapture = imageCapture,
             outputDirectory = outputDirectory,
             mode = mode,
-            paddingValues = WindowInsets.navigationBars.asPaddingValues()
         ) {
             onContentCapture(it)
         }
@@ -511,21 +511,21 @@ private fun LastPhotoPreview(
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.padding(horizontal = 15.dp),
+        modifier = Modifier.padding(top = 10.dp),
         bottomBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
                         bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                    ),
+                    ).padding(horizontal = 15.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        contentColor = Color.Black
                     ),
                     onClick = {
                         onDiscardPhoto()
@@ -533,6 +533,7 @@ private fun LastPhotoPreview(
                     modifier = Modifier.weight(1f).padding(end = 7.5.dp)
                 ) {
                     Text(
+                        color = MaterialTheme.colorScheme.onSurface,
                         text = stringResource(id = R.string.discard),
                         style = MaterialTheme.typography.bodyLarge
                     )
@@ -557,7 +558,7 @@ private fun LastPhotoPreview(
                 .fillMaxSize()
                 .padding(WindowInsets.statusBars.asPaddingValues())
                 .padding(bottom = paddingValues.calculateBottomPadding())
-                .padding(bottom = 15.dp),
+                .padding(bottom = 15.dp).padding(horizontal = 5.dp),
             shape = MaterialTheme.shapes.large
         ) {
             Image(
