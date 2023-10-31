@@ -247,8 +247,7 @@ private fun DashboardDrawerContent(
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         ModalDrawerSheet(
             modifier = Modifier
-                .fillMaxWidth(0.6f)
-                .clip(RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp))
+                .fillMaxWidth(0.75f)
 
         ) {
             Column(

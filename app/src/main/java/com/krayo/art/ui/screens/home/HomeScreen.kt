@@ -2,6 +2,7 @@ package com.krayo.art.ui.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,7 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,6 +29,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -63,7 +66,6 @@ import com.krayo.art.interactors.GlobalFunctions
 import com.krayo.art.ui.theme.DeepRed
 import com.krayo.art.ui.theme.fontFamily
 import com.krayo.art.ui.theme.fontFamilyBold
-import com.krayo.art.ui.theme.fontFamilyLight
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -282,7 +284,8 @@ fun Content(
                     R.string.profile,
                     contentInfoData.name,
                     contentInfoData.description
-                )
+                ),
+                navController = navController
             )
             Interactions { it ->
                 when (it) {
@@ -346,7 +349,8 @@ fun TopBar(
             painter = painterResource(id = R.drawable.alarm),
             contentDescription = stringResource(id = R.string.search),
             tint = Color.White,
-            modifier = Modifier.width(25.dp)
+            modifier = Modifier
+                .width(25.dp)
                 .height(25.dp)
                 .clickable {
                     navController.navigate(Destinations.CONTENT_SEARCH.name)
@@ -360,52 +364,57 @@ fun TopBar(
         ) {
             val condition = preference == Preference.FOR_YOU
             val condition2 = preference == Preference.FOLLOWING
-            Column {
+            Surface(
+                color = if (condition) Color.White.copy(0.75f) else Color.Transparent,
+                shape = RoundedCornerShape(35.dp)
+            ) {
                 Text(
                     text = stringResource(id = R.string.for_you),
                     style = TextStyle(
                         shadow = Shadow(
-                            color = if (condition) Color.Black else Color.Transparent,
+                            color = Color.Black,
                             blurRadius = 1f
                         ),
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontFamily = if (condition) fontFamilyBold else fontFamilyLight,
+                        fontFamily = fontFamilyBold,
                     ),
-                    color = Color.White,
+                    color = if (condition) Color.Black else Color.White,
                     modifier = Modifier
                         .clickable {
                             preference = Preference.FOR_YOU
                         }
+                        .padding(vertical = 5.dp, horizontal = 15.dp)
                 )
             }
-            Icon(
-                painter = painterResource(id = R.drawable.resource__),
-                contentDescription = stringResource(id = R.string.search),
-                tint = Color.White,
-                modifier = Modifier
-                    .padding(10.dp)
-            )
-            Text(
-                text = stringResource(id = R.string.following),
-                style = TextStyle(
-                    shadow = Shadow(
-                        color = if (condition2) Color.Black else Color.Transparent, blurRadius = 1f
+            Surface(
+                color = if (condition2) Color.White.copy(0.75f) else Color.Transparent,
+                shape = RoundedCornerShape(35.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.following),
+                    style = TextStyle(
+                        shadow = Shadow(
+                            color = Color.Black,
+                            blurRadius = 1f
+                        ),
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontFamily = fontFamilyBold,
                     ),
-                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                    fontFamily = if (condition2) fontFamilyBold else fontFamilyLight,
-                ),
-                color = Color.White,
-                modifier = Modifier
-                    .clickable {
-                        preference = Preference.FOLLOWING
-                    }
-            )
+                    color = if (condition2) Color.Black else Color.White,
+                    modifier = Modifier
+                        .clickable {
+                            preference = Preference.FOLLOWING
+                        }
+                        .padding(vertical = 5.dp, horizontal = 15.dp)
+                )
+            }
         }
         Icon(
             painter = painterResource(id = R.drawable.search),
             contentDescription = stringResource(id = R.string.search),
             tint = Color.White,
-            modifier = Modifier.width(25.dp)
+            modifier = Modifier
+                .width(25.dp)
                 .height(25.dp)
                 .clickable {
                     navController.navigate(Destinations.CONTENT_SEARCH.name)
@@ -522,7 +531,11 @@ data class ContentInfoData(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData) {
+fun ContentInfo(
+    modifier: Modifier = Modifier,
+    contentInfoData: ContentInfoData,
+    navController: NavController
+) {
     val descriptionArray = contentInfoData.description.split(" ")
     var description by remember {
         mutableStateOf(descriptionArray.subList(0, 20))
@@ -545,26 +558,19 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
                     painter = painterResource(id = R.drawable.content),
                     contentDescription = contentInfoData.name
                 )
-                Surface(
-                    modifier = Modifier
-                        .size(25.dp)
-                        .clip(CircleShape)
-                        .align(Alignment.BottomEnd),
-                    color = Color.White
-                ) {
-                    Icon(
-                        modifier = modifier
-                            .padding(15.dp)
-                            .width(20.dp)
-                            .height(20.dp)
-                            .clickable {
-                                // TODO: Add functionality
-                            },
-                        painter = painterResource(id = R.drawable.plus_math),
-                        contentDescription = stringResource(id = R.string.add),
-                        tint = Color.Black
-                    )
-                }
+                    Box(
+                        modifier = modifier.size(30.dp).background(Color.White, CircleShape)
+                    ){
+                        Icon(
+                            modifier = modifier.fillMaxSize().padding(5.dp)
+                                .clickable {
+                                    // TODO: Add functionality
+                                },
+                            painter = painterResource(id = R.drawable.plus_math),
+                            contentDescription = stringResource(id = R.string.add),
+                            tint = Color.Black
+                        )
+                    }
             }
             Spacer(
                 modifier =
@@ -577,6 +583,19 @@ fun ContentInfo(modifier: Modifier = Modifier, contentInfoData: ContentInfoData)
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White
             )
+            Spacer(
+                modifier =
+                Modifier.width(10.dp)
+            )
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ), onClick = {
+                    navController.navigate(Destinations.ORDER_CHECKOUT.name)
+                }) {
+                Text("Buy", style = MaterialTheme.typography.bodyLarge)
+            }
         }
         Spacer(modifier = Modifier.height(10.dp))
         FlowRow {
