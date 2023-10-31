@@ -76,6 +76,7 @@ import com.krayo.art.ui.screens.home.HomeScreen
 import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
 import com.krayo.art.ui.screens.onboarding.OnboardingBegin
 import com.krayo.art.ui.screens.onboarding.OnboardingScreen
+import com.krayo.art.ui.screens.order_checkout.OrderCheckoutScreen
 import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.NavDrawerItem
@@ -212,7 +213,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NavHost(
                                 navController = navController,
-                                startDestination = Destinations.HOME.name,
+                                startDestination = Destinations.ANALYTICS.name,
 
                                 ) {
                                 composable(route = Destinations.HOME.name) {
@@ -358,6 +359,15 @@ class MainActivity : ComponentActivity() {
                                         navController, innerPadding,
                                     )
                                 }
+
+                                // ORDER CHECKOUT ROUTES
+                                composable(route = Destinations.ORDER_CHECKOUT.name) {
+                                    OrderCheckoutScreen(
+                                        innerPadding, navController,
+                                    ){
+                                        showBottomNav = it
+                                    }
+                                }
                             }
                         }
                     }
@@ -397,7 +407,6 @@ private fun BottomNavigationBar(
     )
 
     val colors = if (currentDestination?.hierarchy?.any { it.route == Destinations.HOME.name } == true) colorsHome else colorsNormal
-
     val color = MaterialTheme.colorScheme.onBackground
 
     NavigationBar(
@@ -441,7 +450,8 @@ private fun BottomNavigationBar(
             },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.hut),
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = R.drawable.homevector),
                     contentDescription = stringResource(
                         id = R.string.home
                     )

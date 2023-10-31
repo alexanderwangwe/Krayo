@@ -12,6 +12,11 @@
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
+    <string name="proceed_to">Proceed to</string>
+
+    // Common strings
+    <string name="success">Success</string>
+    <string name="confirmed">Confirmed</string>
 
     // Home Screen strings
     <string name="logo">Krayo logo</string>
@@ -78,5 +83,12 @@
     // Profile
     <string name="edit_profile">Edit Profile</string>
     <string name="no_item_image">Camera image with a strike through</string>
+
+    // Checkout Page Strings
+    <string name="checkout">Checkout</string>
+    <string name="delivery">Delivery</string>
+    <string name="payment">Payment</string>
+    <string name="review">Review</string>
+
 
 </resources>

@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -24,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -31,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,15 +68,27 @@ fun DiscoverScreen(navController: NavController, paddingValues: PaddingValues) {
                     horizontalArrangement = Arrangement.Start,
                 )
                 {
-                    Text(
-                        modifier = Modifier.padding(end = 10.dp),
-                        style = MaterialTheme.typography.titleLarge,
-                        text = "Trending"
-                    )
-                    Text(
-                        text = "Events",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(end = 10.dp),
+                            style = MaterialTheme.typography.titleLarge,
+                            text = "Trending"
+                        )
+                        Text(
+                            text = "Events",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                    }
+                    Icon(
+                        Icons.Outlined.Search,
+                        modifier = Modifier.padding(10.dp),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        contentDescription = null
                     )
                 }
                 Categories(items = arrayListOf("For you", "Art", "Photography", "Music", "Dance", "Theatre", "Comedy", "Film", "Literature"))
@@ -103,7 +113,9 @@ fun Categories(
         items(items.size){ index ->
             FilterChip(
                 colors = FilterChipDefaults.filterChipColors(
+                    disabledContainerColor = MaterialTheme.colorScheme.surface,
                     containerColor = MaterialTheme.colorScheme.surface,
+                    disabledSelectedContainerColor = MaterialTheme.colorScheme.surface,
                     selectedContainerColor = MaterialTheme.colorScheme.primary,
                 ),
                 modifier = Modifier.padding(horizontal = 5.dp),
