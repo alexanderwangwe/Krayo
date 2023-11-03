@@ -47,6 +47,7 @@ import com.krayo.art.R
 import com.krayo.art.ui.screens.home.TopBar
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RequestsScreen(navController: NavController, paddingValues: PaddingValues) {

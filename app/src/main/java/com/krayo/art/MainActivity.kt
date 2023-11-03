@@ -45,7 +45,8 @@ import com.krayo.art.ui.screens.analytics.AnalyticsScreen
 import com.krayo.art.ui.screens.authentication.AuthenticationScreen
 import com.krayo.art.ui.screens.authentication.subscreens.AuthSuccessScreen
 import com.krayo.art.ui.screens.authentication.subscreens.EmailVerification
-import com.krayo.art.ui.screens.communities.CommunitiesScreen
+import com.krayo.art.ui.screens.communities.ChatsScreen
+import com.krayo.art.ui.screens.communities.subscreens.JoinCommunitiesScreen
 import com.krayo.art.ui.screens.communities.subscreens.RequestsScreen
 import com.krayo.art.ui.screens.content_creation.ContentCreationScreen
 import com.krayo.art.ui.screens.content_search.ContentSearchScreen
@@ -98,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Destinations.REQUESTS.name,
+                        startDestination = Destinations.JoinCommunities.name,
 
                         ) {
                         composable(route = Destinations.HOME.name) {
@@ -136,8 +137,11 @@ class MainActivity : ComponentActivity() {
                                 },
                             )
                         }
-                        composable(route = Destinations.CHAT.name) {
-                            CommunitiesScreen(navController, innerPadding)
+                        composable(route = Destinations.CHATS.name) {
+                            ChatsScreen(navController, innerPadding)
+                        }
+                        composable(route = Destinations.JoinCommunities.name) {
+                            JoinCommunitiesScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.PROFILE.name) {
                             ProfileScreen(navController, innerPadding)
@@ -152,9 +156,6 @@ class MainActivity : ComponentActivity() {
                                     showBottomNav = show
                                 },
                             )
-                        }
-                        composable(route = Destinations.COMMUNITIES.name) {
-                            CommunitiesScreen(navController, innerPadding)
                         }
                         composable(route = Destinations.DASHBOARD.name) {
                             DashboardScreen(navController, innerPadding){ show ->
@@ -312,11 +313,11 @@ private fun BottomNavigationBar(
             }, colors = colors
         )
         NavigationBarItem(
-            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CHAT.name } == true,
+            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CHATS.name } == true,
             onClick = {
                 updateNavState(true)
-                bottomNavState = Destinations.CHAT.name
-                navController.navigate(Destinations.CHAT.name) {
+                bottomNavState = Destinations.CHATS.name
+                navController.navigate(Destinations.CHATS.name) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
