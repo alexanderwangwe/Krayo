@@ -73,8 +73,8 @@ fun JoinCommunitiesScreen (navController: NavController,paddingValues: PaddingVa
                         Icon(
                             painter = painterResource(id = R.drawable.search),
                             contentDescription = null,
-                            tint=Color.White,
-                            modifier = Modifier.size(20.dp)
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(20.dp).padding(10.dp),
                         )
                     }
                 }

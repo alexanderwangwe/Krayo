@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Destinations.JoinCommunities.name,
+                        startDestination = Destinations.CHATS.name,
 
                         ) {
                         composable(route = Destinations.HOME.name) {
