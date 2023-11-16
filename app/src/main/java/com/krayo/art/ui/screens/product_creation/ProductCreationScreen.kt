@@ -1,7 +1,5 @@
 package com.krayo.art.ui.screens.product_creation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +18,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,9 +34,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -148,34 +150,26 @@ private fun ProductCreationTopBar(
 }
 
 @Composable
-private fun Product(
-    navController: NavController
+fun Product(
+    navController: NavController,
+    canBeEdited: Boolean = true,
+    isAttachedOutside: Boolean = false
 ) {
-    var isAttached by remember { mutableStateOf(false) }
+    var isAttached by remember { mutableStateOf(isAttachedOutside) }
     val attachText = if (isAttached) {
         stringResource(id = R.string.detach)
     } else {
         stringResource(id = R.string.attach)
     }
-    val attachIcon = if (isAttached) {
-        painterResource(id = R.drawable.icon_remove)
-    } else {
-        painterResource(id = R.drawable.plus_math)
-    }
-    val color = if (isAttached) {
-        MaterialTheme.colorScheme.tertiary
-    } else {
-        MaterialTheme.colorScheme.primary
-    }
+    val color = if(isAttachedOutside) Color.Black else MaterialTheme.colorScheme.onSurface
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp)
-            .clip(RoundedCornerShape(15.dp))
-            .border(1.dp, MaterialTheme.colorScheme.background)
-            .background(MaterialTheme.colorScheme.background)
+            .height(200.dp)
+            .padding(vertical = 10.dp)
     ) {
         Surface(
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .padding(10.dp)
                 .clip(RoundedCornerShape(10.dp))
@@ -192,34 +186,53 @@ private fun Product(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
+                .weight(1f)
                 .padding(10.dp)
         ) {
-            Column {
-                Text(text = "Product Name")
-                Text(text = "Product Description", style = MaterialTheme.typography.bodyMedium)
+            Row {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Product Name")
+                    Text(text = "Product Description", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "4 left in stock",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                if (canBeEdited)
+                    Surface(
+                        modifier = Modifier
+                            .size(40.dp),
+                        color = MaterialTheme.colorScheme.background,
+                        shape = CircleShape,
+                    ) {
+                        Icon(
+                            Icons.Outlined.Edit,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxSize(),
+                            contentDescription = "Edit Product"
+                        )
+                    }
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .clickable {
+            Row {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if(isAttached) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.background,
+                    ),
+                    modifier = Modifier.weight(1f),
+                    onClick = {
                         isAttached = !isAttached
-                        if(isAttached){
+                        if(!isAttachedOutside){
                             navController.popBackStack()
                         }
-                    },
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                Icon(
-                    tint = color,
-                    painter = attachIcon,
-                    contentDescription = attachText
-                )
-                Text(
-                    text = attachText,
-                    color = color,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                    }) {
+                    Text(attachText, style = MaterialTheme.typography.bodyLarge, color = color)
+                }
             }
         }
     }

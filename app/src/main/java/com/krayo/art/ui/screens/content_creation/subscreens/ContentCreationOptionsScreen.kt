@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.krayo.art.R
 import com.krayo.art.constants.Destinations
+import com.krayo.art.ui.screens.product_creation.Product
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -182,7 +183,7 @@ private fun ContentDescription(
                 placeholder = {
                     Text(
                         textAlign = TextAlign.Start,
-                        text = "Describe your content in greater detail, add hashtags, or mention people",
+                        text = "Describe your product in greater detail, add hashtags, or mention collaborators",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
@@ -207,64 +208,15 @@ private fun ContentDescription(
 }
 
 @Composable
-private fun Product() {
-    val attachText = stringResource(id = R.string.detach)
-    val attachIcon = painterResource(id = R.drawable.icon_remove)
-    val color = MaterialTheme.colorScheme.tertiary
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 15.dp)
-            .clip(RoundedCornerShape(15.dp))
-            .border(1.dp, MaterialTheme.colorScheme.background)
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        Surface(
-            modifier = Modifier
-                .padding(10.dp)
-                .clip(RoundedCornerShape(10.dp)),
-        ) {
-            Icon(
-                modifier = Modifier.padding(10.dp),
-                tint = MaterialTheme.colorScheme.onSurface,
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = stringResource(id = R.string.search)
-            )
-        }
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            Column {
-                Text(text = "Product Name")
-                Text(text = "Product Description", style = MaterialTheme.typography.bodyMedium)
-            }
-
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        // TODO: Add detach functionality
-                    },
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                Icon(
-                    tint = color, painter = attachIcon, contentDescription = attachText
-                )
-                Text(
-                    text = attachText, color = color, style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun AttachProduct(
     navController: NavController
 ) {
     Column {
-        Product()
+        Product(
+            navController,
+            canBeEdited = true,
+            isAttachedOutside = true,
+        )
         Button(
             modifier = Modifier
                 .fillMaxWidth(),

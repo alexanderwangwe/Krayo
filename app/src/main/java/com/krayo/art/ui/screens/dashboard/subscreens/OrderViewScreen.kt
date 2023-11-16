@@ -1,5 +1,6 @@
 package com.krayo.art.ui.screens.dashboard.subscreens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,23 +10,36 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,13 +51,30 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.krayo.art.R
 import com.krayo.art.constants.Destinations
+import com.krayo.art.ui.screens.order_checkout.components.AmountPayableCard
+import com.krayo.art.ui.screens.order_checkout.components.DeliveryCard
+import com.krayo.art.ui.screens.order_checkout.components.OrderSummaryCard
+import com.krayo.art.ui.screens.order_checkout.components.PaymentMethodCard
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 enum class OrderViewType {
     PENDING_ORDER,
     ONGOING_ORDER,
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+enum class OrderStatus {
+    IN_TRANSIT,
+    CANCELLED,
+    DISPATCHED,
+    DELIVERED,
+    DELAYED,
+}
+
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalStdlibApi::class
+)
 @Composable
 fun OrderViewScreen(
     navController: NavController,
@@ -55,20 +86,120 @@ fun OrderViewScreen(
     var type by rememberSaveable {
         mutableStateOf(OrderViewType.PENDING_ORDER)
     }
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surface,
-        topBar = {
-            TopBar(
-                type = type,
-                navController = navController
-            )
-        },
-        bottomBar = {
-            BottomBar(type = type, navController = navController)
-        }
-    ) { paddingValues ->
-
+    var orderStatus by rememberSaveable {
+        mutableStateOf(OrderStatus.DISPATCHED)
     }
+    val orderState = OrderStatus.values().toList()
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
+    ModalBottomSheetLayout(
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+        sheetState = sheetState,
+        sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+        sheetContent = {
+            LazyColumn(
+                modifier = Modifier.padding(15.dp),
+            ) {
+                item {
+                    Text(
+                        text = "Select Status",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Divider(
+                        color = MaterialTheme.colorScheme.background,
+                        modifier = Modifier.padding(vertical = 10.dp)
+                    )
+                }
+                items(orderState.size) {
+                    Text(
+                        text = orderState[it].name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.clickable {
+                            orderStatus = orderState[it]
+                            scope.launch {
+                                sheetState.hide()
+                            }
+                        })
+                    Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                }
+            }
+        },
+    ) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.surface,
+            topBar = {
+                TopBar(
+                    type = type,
+                    navController = navController
+                )
+            },
+            bottomBar = {
+                if (type == OrderViewType.PENDING_ORDER)
+                    BottomBar(type = type, navController = navController)
+            }
+        ) { paddingValuesScaffold ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValuesScaffold)
+                    .padding(horizontal = 15.dp)
+                    .verticalScroll(
+                        rememberScrollState()
+                    )
+            ) {
+                if (type == OrderViewType.ONGOING_ORDER)
+                    StatusUpdate(
+                        sheetState = sheetState,
+                        scope = scope,
+                        currentStatus = orderStatus,
+                    )
+                DeliveryCard(canChangeDelivery = false)
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                OrderSummaryCard()
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                AmountPayableCard()
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                PaymentMethodCard()
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@Composable
+fun StatusUpdate(
+    sheetState: ModalBottomSheetState,
+    scope: CoroutineScope,
+    currentStatus: OrderStatus,
+) {
+    Text("Status", style = MaterialTheme.typography.bodyLarge)
+    TextField(value = currentStatus.name, onValueChange = {
+        // Do nothing
+    }, modifier = Modifier
+        .fillMaxWidth()
+        .clickable {
+            scope.launch {
+                sheetState.show()
+            }
+        }, enabled = false, trailingIcon = {
+        Icon(
+            Icons.Outlined.KeyboardArrowDown,
+            contentDescription = null
+        )
+    },
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = when (currentStatus) {
+                OrderStatus.IN_TRANSIT -> MaterialTheme.colorScheme.background
+                OrderStatus.CANCELLED -> MaterialTheme.colorScheme.error
+                OrderStatus.DISPATCHED -> MaterialTheme.colorScheme.background
+                OrderStatus.DELIVERED -> MaterialTheme.colorScheme.secondary
+                OrderStatus.DELAYED -> MaterialTheme.colorScheme.error
+            },
+        )
+    )
+    Spacer(modifier = Modifier.padding(vertical = 15.dp))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,14 +214,14 @@ fun TopBar(
         OrderViewType.ONGOING_ORDER -> R.string.ongoing_order
     }
 
-    TopAppBar(
+    CenterAlignedTopAppBar(
         navigationIcon = {
             Row(
                 modifier = modifier
                     .padding(start = 5.dp),
-            ){
+            ) {
                 Surface(
-                    modifier = modifier.size(40.dp),
+                    modifier = modifier.size(35.dp),
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.background,
                     onClick = {
@@ -111,7 +242,7 @@ fun TopBar(
         title = {
             Box(
                 modifier = modifier
-                    .fillMaxWidth().offset(x = (-20).dp),
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = stringResource(id = wordingStringResource))
@@ -130,10 +261,18 @@ fun BottomBar(
     val color = Color.Black
     val btnModifier = modifier
         .fillMaxWidth()
+    Divider(
+        color = MaterialTheme.colorScheme.background,
+    )
     Column(
-        modifier = modifier.padding(
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        ).padding(horizontal = 15.dp)
+        modifier = modifier
+            .padding(
+                bottom = WindowInsets.navigationBars
+                    .asPaddingValues()
+                    .calculateBottomPadding()
+            )
+            .padding(horizontal = 15.dp)
+            .padding(top = 10.dp)
     ) {
         if (isOrderPending) {
             Button(

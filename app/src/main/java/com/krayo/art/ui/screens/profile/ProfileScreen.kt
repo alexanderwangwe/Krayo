@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -263,15 +264,19 @@ private fun ProfileDrawerContent(
     var selected by rememberSaveable {
         mutableStateOf(DrawerItem.DASHBOARD)
     }
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         ModalDrawerSheet(
+            drawerShape = RoundedCornerShape(0.dp),
+            drawerContainerColor = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .fillMaxWidth(0.75f)
                 .padding(
                     bottom = paddingValuesParent.calculateBottomPadding()
                 )
         ) {
-            Column(modifier = Modifier.padding(horizontal = 15.dp).padding(bottom = 15.dp)) {
+            Column(modifier = Modifier
+                .padding(horizontal = 15.dp)) {
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -351,7 +356,8 @@ fun NavDrawerItem(
     @DrawableRes icon: Int = R.drawable.chevron_right_25,
     onClick: () -> Unit,
 ) {
-    val color = if (selected) Color.Black else guidingColor
+    val darkMode = isSystemInDarkTheme()
+    val color = if (selected) if(darkMode) Color.Black else Color.White else guidingColor
     NavigationDrawerItem(
         modifier = Modifier.padding(top = 15.dp),
         onClick = {

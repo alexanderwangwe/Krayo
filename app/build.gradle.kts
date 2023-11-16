@@ -68,10 +68,11 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.2")
     implementation("androidx.datastore:datastore-preferences-android:1.1.0-alpha05")
     implementation("com.google.accompanist:accompanist-pager:0.12.0")
+    implementation("androidx.media3:media3-common:1.1.1")
 
 
     // CameraX core library using the camera2 implementation
-    val camerax_version = "1.4.0-alpha01"
+    val camerax_version = "1.4.0-alpha02"
     implementation("androidx.camera:camera-core:${camerax_version}")
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
@@ -86,6 +87,9 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.accompanist:accompanist-pager:0.13.0")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.13.0")
+
+    // ExoPlayer
+    implementation("com.google.android.exoplayer:exoplayer:2.15.1")
 
 
     testImplementation("junit:junit:4.13.2")

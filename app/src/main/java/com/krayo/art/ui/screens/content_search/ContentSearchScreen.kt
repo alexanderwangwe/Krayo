@@ -40,7 +40,7 @@ fun ContentSearchScreen(
     paddingValues: PaddingValues,
     updateNavState: (Boolean) -> Unit
 ) {
-    //updateNavState(false)
+    updateNavState(false)
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier.fillMaxSize(),

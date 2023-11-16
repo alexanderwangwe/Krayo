@@ -21,6 +21,7 @@
     // Home Screen strings
     <string name="logo">Krayo logo</string>
     <string name="search">Search</string>
+    <string name="market">Market</string>
     <string name="for_you">For you</string>
     <string name="following">Following</string>
     <string name="notifications">Notifications</string>
@@ -51,9 +52,13 @@
     <string name="post">Post</string>
     <string name="finish">Finish</string>
     <string name="discard">Discard</string>
-    <string name="permission_grant">Before you can use the camera, you need to grant permission.</string>
+    <string name="videoFile">videoFile</string>
+    <string name="permission_grant">Before you can use the camera, you need to grant permission for the following: \nCamera access\nMicrophone access.</string>
     <string name="permission_denied">You denied the permission. In order for you to use the camera, you need to grant the permission.\n\nIf denied, you can grant the permission in the settings.</string>
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission_camera">Grant Camera Permission</string>
+    <string name="grant_permission_audio">Grant Audio Permission</string>
+    <string name="grant_video_permission">Grant Video Permission</string>
+    <string name="all_permissions_granted">All permissions have been granted</string>
 
     // Product creation strings
     <string name="products">Products</string>

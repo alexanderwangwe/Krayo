@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -21,15 +22,17 @@ fun OnboardingTopBar(
     navController: NavController
 ) {
     TopAppBar(title = { /*TODO*/ }, navigationIcon = {
-        Icon(
-            modifier = Modifier.size(35.dp).clickable {
-                navController.popBackStack()
-            },
-            tint = MaterialTheme.colorScheme.onSurface,
-            painter = painterResource(id = R.drawable.cancel),
-            contentDescription = stringResource(
-                id = R.string.go_back
+        IconButton(onClick = {
+            navController.popBackStack()
+        }) {
+            Icon(
+                modifier = Modifier.size(35.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                painter = painterResource(id = R.drawable.cancel),
+                contentDescription = stringResource(
+                    id = R.string.go_back
+                )
             )
-        )
+        }
     })
 }

@@ -1,14 +1,13 @@
 package com.krayo.art.ui.screens.home
 
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,11 +24,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,28 +39,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.krayo.art.R
 import com.krayo.art.constants.Destinations
 import com.krayo.art.interactors.GlobalFunctions
-import com.krayo.art.ui.theme.DeepRed
+import com.krayo.art.ui.components.content_display.ContentInfo
+import com.krayo.art.ui.components.content_display.ContentInfoData
+import com.krayo.art.ui.components.content_display.Interactions
+import com.krayo.art.ui.components.content_display.VideoPlayer
+import com.krayo.art.ui.theme.Purple20
 import com.krayo.art.ui.theme.fontFamily
 import com.krayo.art.ui.theme.fontFamilyBold
 import kotlinx.coroutines.launch
@@ -93,8 +99,13 @@ fun HomeScreen(
             )
         }
     ) { padding ->
+        val context = LocalView.current.context
+        val videos = arrayListOf<Uri>(
+            Uri.parse("android.resource://${context.packageName}/${R.raw.content2}"),
+            Uri.parse("android.resource://${context.packageName}/${R.raw.content}"),
+        )
         val pagerState = rememberPagerState(pageCount = {
-            10
+            videos.size
         })
         val scope = rememberCoroutineScope()
         val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -103,6 +114,7 @@ fun HomeScreen(
         }else{
             updateShowNavState(true)
         }
+
         ModalBottomSheetLayout(
             sheetBackgroundColor = MaterialTheme.colorScheme.surface,
             sheetState = sheetState,
@@ -112,6 +124,14 @@ fun HomeScreen(
             },
         ) {
             VerticalPager(state = pagerState) { page ->
+                var isVisible by remember { mutableStateOf(false) }
+                val screenHeightDp = LocalConfiguration.current.screenHeightDp
+
+                val modifier = Modifier.fillMaxSize()
+                    .onGloballyPositioned { coordinates ->
+                        isVisible = coordinates.boundsInParent().top <= screenHeightDp
+                    }
+
                 Content(
                     updateShowNavState = {
                         updateShowNavState(it)
@@ -131,6 +151,11 @@ fun HomeScreen(
                             }
                         }
                     },
+                    isVisible = isVisible,
+                    modifier = modifier,
+                    page = page,
+                    currentPage = pagerState.currentPage,
+                    videoURI = videos[page],
                     contentInfoData = ContentInfoData(
                         R.drawable.content,
                         R.string.profile,
@@ -247,6 +272,7 @@ fun Comments(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Content(
     hideContent: Boolean,
@@ -255,23 +281,25 @@ fun Content(
     navController: NavController,
     updateShowNavState: (Boolean) -> Unit = {},
     updateHideState: () -> Unit = {},
-    updateCommentModalSheetState: () -> Unit = {}
+    updateCommentModalSheetState: () -> Unit = {},
+    isVisible: Boolean,
+    page: Int,
+    videoURI: Uri,
+    currentPage: Int,
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val context = LocalView.current.context
 
     Surface(
-        modifier = modifier
-            .height(screenHeight)
-            .clickable {
-                updateHideState()
-            },
-        color = MaterialTheme.colorScheme.primary
+        modifier = Modifier
+            .height(screenHeight),
+        color = Purple20
     ) {
+        VideoPlayer(videoURI, modifier, playWhenReadyParent = page == currentPage, updateHideState = updateHideState)
         Row(
             modifier = Modifier
-                .absolutePadding(bottom = 15.dp)
+                .absolutePadding(bottom = 35.dp)
                 .alpha(if (hideContent) 0f else 1f),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.Center
@@ -321,6 +349,7 @@ fun Content(
 }
 
 enum class Preference {
+    LIVE,
     FOR_YOU,
     FOLLOWING
 }
@@ -339,23 +368,26 @@ fun TopBar(
     Row(
         modifier = Modifier
             .padding(paddingValues)
-            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .padding(horizontal = 5.dp, vertical = 10.dp)
             .alpha(if (hideContent) 0f else 1f),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Icon(
-            painter = painterResource(id = R.drawable.alarm),
-            contentDescription = stringResource(id = R.string.search),
-            tint = Color.White,
-            modifier = Modifier
-                .width(25.dp)
-                .height(25.dp)
-                .clickable {
-                    navController.navigate(Destinations.CONTENT_SEARCH.name)
-                }
-        )
+        IconButton(onClick = {
+            navController.navigate(Destinations.CONTENT_SEARCH.name)
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.alarm),
+                contentDescription = stringResource(id = R.string.search),
+                tint = Color.White,
+                modifier = Modifier
+                    .width(25.dp)
+                    .height(25.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(20.dp))
 
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -364,11 +396,39 @@ fun TopBar(
         ) {
             val condition = preference == Preference.FOR_YOU
             val condition2 = preference == Preference.FOLLOWING
+            val condition3 = preference == Preference.LIVE
+
             Surface(
+                modifier = Modifier.weight(1f),
+                color = if (condition3) Color.White.copy(0.75f) else Color.Transparent,
+                shape = RoundedCornerShape(35.dp)
+            ) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = stringResource(id = R.string.market),
+                    style = TextStyle(
+                        shadow = Shadow(
+                            color = Color.Black,
+                            blurRadius = 1f
+                        ),
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontFamily = fontFamilyBold,
+                    ),
+                    color = if (condition3) Color.Black else Color.White,
+                    modifier = Modifier
+                        .clickable {
+                            preference = Preference.LIVE
+                        }
+                        .padding(vertical = 5.dp)
+                )
+            }
+            Surface(
+                modifier = Modifier.weight(1f),
                 color = if (condition) Color.White.copy(0.75f) else Color.Transparent,
                 shape = RoundedCornerShape(35.dp)
             ) {
                 Text(
+                    textAlign = TextAlign.Center,
                     text = stringResource(id = R.string.for_you),
                     style = TextStyle(
                         shadow = Shadow(
@@ -383,14 +443,16 @@ fun TopBar(
                         .clickable {
                             preference = Preference.FOR_YOU
                         }
-                        .padding(vertical = 5.dp, horizontal = 15.dp)
+                        .padding(vertical = 5.dp)
                 )
             }
             Surface(
+                modifier = Modifier.weight(1f),
                 color = if (condition2) Color.White.copy(0.75f) else Color.Transparent,
                 shape = RoundedCornerShape(35.dp)
             ) {
                 Text(
+                    textAlign = TextAlign.Center,
                     text = stringResource(id = R.string.following),
                     style = TextStyle(
                         shadow = Shadow(
@@ -405,244 +467,24 @@ fun TopBar(
                         .clickable {
                             preference = Preference.FOLLOWING
                         }
-                        .padding(vertical = 5.dp, horizontal = 15.dp)
+                        .padding(vertical = 5.dp)
                 )
             }
         }
-        Icon(
-            painter = painterResource(id = R.drawable.search),
-            contentDescription = stringResource(id = R.string.search),
-            tint = Color.White,
-            modifier = Modifier
-                .width(25.dp)
-                .height(25.dp)
-                .clickable {
-                    navController.navigate(Destinations.CONTENT_SEARCH.name)
-                }
-        )
-    }
-}
 
-@Composable
-fun InteractionItem(
-    icon: Int,
-    label: Int,
-    selected: Boolean,
-    type: Interactions,
-    onClick: () -> Unit,
-    liked: Boolean = false,
-    bookmarked: Boolean = false,
-    modifier: Modifier = Modifier,
-) {
-    val likeCondition = if (liked) DeepRed else Color.White
-    val bookmarkCondition = if (bookmarked) MaterialTheme.colorScheme.secondary else Color.White
-    Icon(
-        modifier = modifier
-            .padding(15.dp)
-            .width(30.dp)
-            .height(30.dp)
-            .clickable {
-                onClick()
-            },
-        painter = painterResource(id = icon),
-        contentDescription = stringResource(id = label),
-        tint = if (type == Interactions.BOOKMARK) bookmarkCondition else likeCondition
-    )
-}
+        Spacer(modifier = Modifier.width(20.dp))
 
-enum class Interactions {
-    LIKE,
-    COMMENT,
-    BOOKMARK,
-    SHARE,
-    FULLSCREEN,
-    UNSELECTED
-}
-
-@Composable
-fun Interactions(
-    modifier: Modifier = Modifier,
-    onClick: (Interactions) -> Unit
-) {
-    var liked by remember {
-        mutableStateOf(false)
-    }
-    var bookmarked by remember {
-        mutableStateOf(false)
-    }
-    var selected by remember {
-        mutableStateOf(Interactions.UNSELECTED)
-    }
-    Column(
-        modifier = modifier
-            .absolutePadding(bottom = 25.dp),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.End
-    ) {
-        InteractionItem(
-            icon = R.drawable.heart,
-            label = R.string.like,
-            selected = selected == Interactions.LIKE,
-            liked = liked,
-            type = Interactions.LIKE,
-            onClick = {
-                onClick(Interactions.LIKE)
-                selected = Interactions.LIKE
-                liked = !liked
-            })
-        InteractionItem(
-            icon = R.drawable.speech_bubble2,
-            label = R.string.comment,
-            selected = selected == Interactions.COMMENT,
-            type = Interactions.COMMENT,
-            onClick = {
-                selected = Interactions.COMMENT
-                onClick(Interactions.COMMENT)
-            })
-        InteractionItem(
-            icon = R.drawable.add_bookmark,
-            label = R.string.bookmark,
-            selected = selected == Interactions.BOOKMARK,
-            bookmarked = bookmarked,
-            type = Interactions.BOOKMARK,
-            onClick = {
-                selected = Interactions.BOOKMARK
-                onClick(Interactions.BOOKMARK)
-                bookmarked = !bookmarked
-            })
-        InteractionItem(
-            icon = R.drawable.share,
-            label = R.string.share,
-            selected = selected == Interactions.SHARE,
-            type = Interactions.SHARE,
-            onClick = {
-                selected = Interactions.SHARE
-                onClick(Interactions.SHARE)
-            })
-    }
-}
-
-data class ContentInfoData(
-    val image: Int,
-    val label: Int,
-    val name: String,
-    val description: String
-)
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun ContentInfo(
-    modifier: Modifier = Modifier,
-    contentInfoData: ContentInfoData,
-    navController: NavController
-) {
-    val descriptionArray = contentInfoData.description.split(" ")
-    var description by remember {
-        mutableStateOf(descriptionArray.subList(0, 20))
-    }
-    var showMore by rememberSaveable {
-        mutableStateOf(descriptionArray.size > 20)
-    }
-    Column(
-        modifier = modifier.padding(horizontal = 15.dp),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.Start
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box() {
-                Image(
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape),
-                    painter = painterResource(id = R.drawable.content),
-                    contentDescription = contentInfoData.name
-                )
-                    Box(
-                        modifier = modifier.size(30.dp).background(Color.White, CircleShape)
-                    ){
-                        Icon(
-                            modifier = modifier.fillMaxSize().padding(5.dp)
-                                .clickable {
-                                    // TODO: Add functionality
-                                },
-                            painter = painterResource(id = R.drawable.plus_math),
-                            contentDescription = stringResource(id = R.string.add),
-                            tint = Color.Black
-                        )
-                    }
-            }
-            Spacer(
-                modifier =
-                Modifier.width(10.dp)
+        IconButton(onClick = {
+            navController.navigate(Destinations.CONTENT_SEARCH.name)
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = stringResource(id = R.string.search),
+                tint = Color.White,
+                modifier = Modifier
+                    .width(25.dp)
+                    .height(25.dp)
             )
-            Text(
-                text = contentInfoData.name,
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White
-            )
-            Spacer(
-                modifier =
-                Modifier.width(10.dp)
-            )
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
-                ), onClick = {
-                    navController.navigate(Destinations.ORDER_CHECKOUT.name)
-                }) {
-                Text("Buy", style = MaterialTheme.typography.bodyLarge)
-            }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        FlowRow {
-            for (text in description) {
-                if (text[0] == '#') {
-                    Text(
-                        text = "$text ",
-                        fontFamily = fontFamilyBold,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White
-                    )
-                } else {
-                    Text(
-                        style = MaterialTheme.typography.bodySmall,
-                        text = "$text ",
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight.Light,
-                        color = Color.White
-                    )
-                }
-            }
-            if (showMore) {
-                Text(
-                    text = "...show more",
-                    fontFamily = fontFamilyBold,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                    modifier = Modifier.clickable {
-                        description = contentInfoData.description.split(" ")
-                        showMore = false
-                    }
-                )
-            } else {
-                Text(
-                    text = "show less",
-                    fontFamily = fontFamilyBold,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                    modifier = Modifier.clickable {
-                        description = contentInfoData.description.split(" ").subList(0, 20)
-                        showMore = true
-                    }
-                )
-            }
         }
     }
 }

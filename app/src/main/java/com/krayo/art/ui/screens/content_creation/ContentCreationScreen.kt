@@ -1,16 +1,19 @@
 package com.krayo.art.ui.screens.content_creation
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,10 +27,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.krayo.art.MainActivity
 import com.krayo.art.ui.screens.content_creation.subscreens.ContentScreen
+import com.krayo.art.ui.theme.Grey60
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +53,10 @@ fun ContentCreationScreen(
     var showBottomBar by rememberSaveable {
         mutableStateOf(true)
     }
+
+    val window = (context as Activity).window
+    window.statusBarColor = Color.Transparent.toArgb()
+    window.navigationBarColor = Color.Black.toArgb()
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -67,33 +77,15 @@ fun ContentCreationScreen(
                 .fillMaxSize(),
             color = MaterialTheme.colorScheme.surface,
         ) {
-            when (currentMode) {
-                ContentCreationMode.UPLOAD -> {
-                    // TODO: Implement upload screen
-                }
-
-                ContentCreationMode.VIDEO -> {
-                    ContentScreen(
-                        outputDirectory = outputDirectory,
-                        navController = navController,
-                        mode = currentMode,
-                        updateBottomBarState = {
-                            showBottomBar = it
-                        }
-                    )
-                }
-
-                ContentCreationMode.PHOTO -> {
-                    ContentScreen(
-                        outputDirectory = outputDirectory,
-                        navController = navController,
-                        mode = currentMode,
-                        updateBottomBarState = {
-                            showBottomBar = it
-                        }
-                    )
-                }
-            }
+            ContentScreen(
+                outputDirectory = outputDirectory,
+                navController = navController,
+                mode = currentMode,
+                updateBottomBarState = {
+                    showBottomBar = it
+                },
+                activity = context
+            )
 
         }
     }
@@ -112,27 +104,36 @@ private fun ContentCreationBottomBar(
         mutableStateOf(ContentCreationMode.VIDEO)
     }
 
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
+    val explainerBar = listOf(
+        "Showcase your product",
+        "Explain your product",
+        "Show your product in action",
+        "Sell your product",
+    )
+
+    val rangeLimit = explainerBar.size - 1
+    val randomNumber = (0..rangeLimit).random()
+
+    Column(
         modifier = Modifier
-            .fillMaxWidth().padding(vertical = 25.dp)
+            .fillMaxWidth()
             .padding(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .clickable {
-                    currentMode = ContentCreationMode.UPLOAD
-                    modeChangedListener(currentMode)
-                },
-            style = MaterialTheme.typography.bodyLarge,
-            text = "Upload",
-            color = if (currentMode == ContentCreationMode.UPLOAD) MaterialTheme.colorScheme.tertiary else Color.Gray,
+        Box(
+            modifier = Modifier.padding(vertical = 10.dp)
+        ){
+            Text(explainerBar[randomNumber], color = Color.Gray, style = MaterialTheme.typography.bodyMedium)
+        }
+        Divider(
+            thickness = 1.dp,
+                color = Grey60
         )
         Text(
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp, vertical = 10.dp)
                 .clickable {
                     currentMode = ContentCreationMode.VIDEO
                     modeChangedListener(currentMode)
@@ -140,17 +141,6 @@ private fun ContentCreationBottomBar(
             style = MaterialTheme.typography.bodyLarge,
             text = "Video",
             color = if (currentMode == ContentCreationMode.VIDEO) MaterialTheme.colorScheme.primary else Color.Gray,
-        )
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .clickable {
-                    currentMode = ContentCreationMode.PHOTO
-                    modeChangedListener(currentMode)
-                },
-            style = MaterialTheme.typography.bodyLarge,
-            text = "Photo",
-            color = if (currentMode == ContentCreationMode.PHOTO) MaterialTheme.colorScheme.secondary else Color.Gray,
         )
     }
 }
