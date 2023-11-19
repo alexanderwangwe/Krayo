@@ -25,4 +25,5 @@ enum class Destinations {
     ACCOUNT_CREATION,
     EMAIL_VERIFICATION,
     AUTH_SUCCESS,
+    CREDIT_OR_DEBIT_CARD,
 }

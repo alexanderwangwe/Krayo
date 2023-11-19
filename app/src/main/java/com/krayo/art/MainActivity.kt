@@ -77,6 +77,7 @@ import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
 import com.krayo.art.ui.screens.onboarding.OnboardingBegin
 import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.screens.order_checkout.OrderCheckoutScreen
+import com.krayo.art.ui.screens.payment_methods.CreditOrDebitScreen
 import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.NavDrawerItem
@@ -213,7 +214,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NavHost(
                                 navController = navController,
-                                startDestination = Destinations.ANALYTICS.name,
+                                startDestination = Destinations.HOME.name,
 
                                 ) {
                                 composable(route = Destinations.HOME.name) {
@@ -367,6 +368,14 @@ class MainActivity : ComponentActivity() {
                                     ){
                                         showBottomNav = it
                                     }
+                                }
+                                composable(route = Destinations.CREDIT_OR_DEBIT_CARD.name) {
+                                    CreditOrDebitScreen(
+                                        innerPadding, navController,
+                                    ) {
+                                        showBottomNav
+                                    }
+
                                 }
                             }
                         }

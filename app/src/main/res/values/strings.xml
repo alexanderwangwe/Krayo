@@ -90,5 +90,10 @@
     <string name="payment">Payment</string>
     <string name="review">Review</string>
 
+    //Payments Method screens
+    <string name="card_number">Card Number</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="cvv">CVV</string>
+    <string name="card_holder_name">Card Holder Name</string>
 
 </resources>
