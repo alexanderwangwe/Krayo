@@ -213,7 +213,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NavHost(
                                 navController = navController,
-                                startDestination = Destinations.ANALYTICS.name,
+                                startDestination = Destinations.HOME.name,
 
                                 ) {
                                 composable(route = Destinations.HOME.name) {
