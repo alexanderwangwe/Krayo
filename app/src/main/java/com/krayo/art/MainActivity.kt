@@ -65,6 +65,7 @@ import com.krayo.art.ui.screens.authentication.AuthenticationScreen
 import com.krayo.art.ui.screens.authentication.subscreens.AuthSuccessScreen
 import com.krayo.art.ui.screens.authentication.subscreens.EmailVerification
 import com.krayo.art.ui.screens.communities.CommunitiesScreen
+import com.krayo.art.ui.screens.communities.subscreens.RequestsScreen
 import com.krayo.art.ui.screens.content_creation.ContentCreationScreen
 import com.krayo.art.ui.screens.content_creation.subscreens.ContentCreationOptionsScreen
 import com.krayo.art.ui.screens.content_search.ContentSearchScreen
@@ -149,6 +150,7 @@ class MainActivity : ComponentActivity() {
                     },
                     contentWindowInsets = WindowInsets.statusBars
                 ) { innerPadding ->
+
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         ModalNavigationDrawer(
                             drawerState = drawerState,
@@ -253,6 +255,9 @@ class MainActivity : ComponentActivity() {
                                     AddProductScreen(navController, innerPadding)
                                 }
 
+                        composable(route = Destinations.REQUESTS.name) {
+                            RequestsScreen(navController, innerPadding)
+                        }
                                 composable(route = Destinations.SEARCH_RESULTS.name) {
                                     SearchResultsScreen(
                                         navController,
