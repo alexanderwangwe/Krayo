@@ -2,9 +2,9 @@ package com.krayo.art.ui.screens.product_creation.subscreens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,6 +30,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,44 +86,39 @@ fun AddProductScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductCreationTopBar(
     navController: NavController, modifier: Modifier, paddingValues: PaddingValues
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(paddingValues)
-            .padding(15.dp),
-    ) {
-        Surface(
-            modifier = modifier.size(40.dp),
-            color = MaterialTheme.colorScheme.background,
-            shape = CircleShape
-        ) {
-            Icon(
-                modifier = modifier
-                    .padding(10.dp)
+    TopAppBar(title = {
+        Box {
+            Surface(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .height(40.dp)
                     .clickable {
                         navController.popBackStack()
                     },
-                tint = MaterialTheme.colorScheme.onSurface,
-                painter = painterResource(id = R.drawable.back),
-                contentDescription = stringResource(id = R.string.go_back)
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                Icon(
+                    modifier = Modifier.padding(10.dp),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    painter = painterResource(id = R.drawable.back),
+                    contentDescription = stringResource(
+                        id = R.string.go_back
+                    )
+                )
+            }
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = stringResource(id = R.string.create_product),
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
-
-        Text(
-            modifier = modifier
-                .fillMaxWidth()
-                .offset(x = -17.5.dp),
-            text = stringResource(id = R.string.add_product),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
+    })
 }
 
 @Composable
@@ -309,14 +303,17 @@ private fun BottomBar(
     paddingValues: PaddingValues,
     navController: NavController, modifier: Modifier
 ) {
-    Button(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = paddingValues.calculateBottomPadding() + 10.dp)
-            .padding(horizontal = 15.dp),
-        onClick = {
-            navController.popBackStack()
-        }) {
-        Text(text = stringResource(id = R.string.continue_text))
+    Button(modifier = modifier
+        .fillMaxWidth()
+        .padding(bottom = paddingValues.calculateBottomPadding() + 10.dp)
+        .padding(horizontal = 15.dp)
+        .height(50.dp), onClick = {
+        navController.popBackStack()
+    }) {
+        Text(
+            text = stringResource(id = R.string.add_product),
+            color = Color.Black,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
