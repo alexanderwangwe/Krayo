@@ -48,7 +48,7 @@ fun PaymentCard(paymentMethod: PaymentMethod, modifier: Modifier = Modifier){
             contentColor = MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp
+            defaultElevation = 0.dp
         ),
         modifier = modifier
             .fillMaxWidth()

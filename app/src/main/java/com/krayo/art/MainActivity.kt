@@ -389,6 +389,13 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
+                                composable(route = Destinations.CREDIT_OR_DEBIT_CARD.name) {
+                                    CreditOrDebitScreen(
+                                        innerPadding, navController,
+                                    ) {
+                                        showBottomNav
+                                    }
+                                }
                             }
                         }
                     }
