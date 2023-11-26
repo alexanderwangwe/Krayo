@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.krayo.art.R
 import com.krayo.art.ui.screens.home.TopBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CommunitiesScreen(navController: NavController, paddingValues: PaddingValues) {
@@ -94,7 +95,7 @@ fun CommunitiesScreen(navController: NavController, paddingValues: PaddingValues
             Text(
                 text = stringResource(R.string.you_have_not_started_any_chats_yet),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
+                color = Color.Gray,
                 )
             }
     }

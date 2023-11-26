@@ -2,37 +2,42 @@ package com.krayo.art.interactors
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import androidx.palette.graphics.Palette
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+
 
 // DO NOT TOUCH. STILL WORKING ON THIS
 object PalleteColorGenerator {
 
-//    suspend fun convertImageUrlToBitmap(
-//        imageUrl: String,
-//        context: Context
-//    ): Bitmap? {
-//        val loader = ImageLoader(context = context)
-//        val request = ImageRequest.Builder(context = context)
-//            .data(imageUrl)
-//            .allowHardware(false)
-//            .build()
-//        val imageResult = loader.execute(request = request)
-//        return if (imageResult is SuccessResult) {
-//            (imageResult.drawable as BitmapDrawable).bitmap
-//        } else {
-//            null
-//        }
-//    }
-
-    suspend fun convertImageToBitmap(
-        image: Drawable,
+    suspend fun convertImageUrlToBitmap(
+        imageUrl: String,
         context: Context
     ): Bitmap? {
-        // TODO: Convert an image drawable passed down to a bitmap
+        val loader = ImageLoader(context = context)
+        val request = ImageRequest.Builder(context = context)
+            .data(imageUrl)
+            .allowHardware(false)
+            .build()
+        val imageResult = loader.execute(request = request)
+        return if (imageResult is SuccessResult) {
+            (imageResult.drawable as BitmapDrawable).bitmap
+        } else {
+            null
+        }
+    }
 
-        return (image as BitmapDrawable).bitmap
+    fun convertImageToBitmap(
+        image: Int,
+        context: Context
+    ): Bitmap? {
+        return BitmapFactory.decodeResource(
+            context.resources,
+            image
+        )
     }
 
     fun extractColorsFromBitmap(bitmap: Bitmap): Map<String, String> {

@@ -66,6 +66,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.palette:palette-ktx:1.0.0")
     implementation("androidx.compose.material:material:1.5.2")
+    implementation("androidx.datastore:datastore-preferences-android:1.1.0-alpha05")
+    implementation("com.google.accompanist:accompanist-pager:0.12.0")
+
 
     // CameraX core library using the camera2 implementation
     val camerax_version = "1.4.0-alpha01"
@@ -76,7 +79,14 @@ dependencies {
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
+    implementation("io.coil-kt:coil-compose:1.4.0")
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    implementation("me.onebone:toolbar-compose:2.3.5")
+
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.accompanist:accompanist-pager:0.13.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.13.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -25,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.krayo.art.R
@@ -62,7 +65,7 @@ fun ProductCreationScreen(
         Column(
             modifier = Modifier.padding(paddingValues),
         ) {
-            ProductsListing()
+            ProductsListing(navController = navController)
         }
     }
 }
@@ -91,60 +94,63 @@ private fun AddProductFAB(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductCreationTopBar(
     navController: NavController,
     modifier: Modifier,
     paddingValues: PaddingValues
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(paddingValues)
-            .padding(15.dp),
-    ) {
+    TopAppBar(modifier = modifier.padding(horizontal = 12.5.dp), navigationIcon = {
         Surface(
-            modifier = modifier
-                .size(40.dp),
+            modifier = Modifier
+                .clip(CircleShape)
+                .height(40.dp)
+                .clickable {
+                    navController.popBackStack()
+                },
             color = MaterialTheme.colorScheme.background,
-            shape = CircleShape
         ) {
             Icon(
-                modifier = modifier
-                    .padding(10.dp)
-                    .clickable {
-                        navController.popBackStack()
-                    },
+                modifier = Modifier.padding(10.dp),
                 tint = MaterialTheme.colorScheme.onSurface,
                 painter = painterResource(id = R.drawable.back),
-                contentDescription = stringResource(id = R.string.go_back)
+                contentDescription = stringResource(
+                    id = R.string.go_back
+                )
             )
         }
+    }, title = {
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
             text = stringResource(id = R.string.products),
-            style = MaterialTheme.typography.titleLarge
+            color = MaterialTheme.colorScheme.onSurface
         )
-        Surface(
-            modifier = modifier
-                .size(40.dp),
-            color = MaterialTheme.colorScheme.background,
-            shape = CircleShape
-        ) {
-            Icon(
+    },
+        actions = {
+            Surface(
                 modifier = modifier
-                    .padding(10.dp),
-                tint = MaterialTheme.colorScheme.onSurface,
-                painter = painterResource(id = R.drawable.search),
-                contentDescription = stringResource(id = R.string.search)
-            )
-        }
-    }
+                    .size(40.dp),
+                color = MaterialTheme.colorScheme.background,
+                shape = CircleShape
+            ) {
+                Icon(
+                    modifier = modifier
+                        .padding(10.dp),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    painter = painterResource(id = R.drawable.search),
+                    contentDescription = stringResource(id = R.string.search)
+                )
+            }
+        })
 }
 
 @Composable
-private fun Product() {
+private fun Product(
+    navController: NavController
+) {
     var isAttached by remember { mutableStateOf(false) }
     val attachText = if (isAttached) {
         stringResource(id = R.string.detach)
@@ -157,7 +163,7 @@ private fun Product() {
         painterResource(id = R.drawable.plus_math)
     }
     val color = if (isAttached) {
-        MaterialTheme.colorScheme.error
+        MaterialTheme.colorScheme.tertiary
     } else {
         MaterialTheme.colorScheme.primary
     }
@@ -198,6 +204,9 @@ private fun Product() {
                     .fillMaxHeight()
                     .clickable {
                         isAttached = !isAttached
+                        if(isAttached){
+                            navController.popBackStack()
+                        }
                     },
                 verticalAlignment = Alignment.Bottom,
             ) {
@@ -217,10 +226,12 @@ private fun Product() {
 }
 
 @Composable
-private fun ProductsListing() {
+private fun ProductsListing(
+    navController: NavController
+) {
     LazyVerticalGrid(columns = GridCells.Fixed(1), content = {
         items(10) {
-            Product()
+            Product(navController = navController)
         }
     })
 }

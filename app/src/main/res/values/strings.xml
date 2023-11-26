@@ -11,6 +11,12 @@
     <string name="continue_text">Continue</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="proceed_to">Proceed to</string>
+
+    // Common strings
+    <string name="success">Success</string>
+    <string name="confirmed">Confirmed</string>
 
     // Home Screen strings
     <string name="logo">Krayo logo</string>
@@ -23,6 +29,8 @@
     <string name="comment">Comment</string>
     <string name="bookmark">Bookmark</string>
     <string name="share">Share</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     // Authentication strings
     <string name="login">Login</string>
@@ -39,6 +47,10 @@
     <string name="add_effects">Add Effects</string>
     <string name="effects">Effects</string>
     <string name="upload">Upload</string>
+    <string name="next">Next</string>
+    <string name="post">Post</string>
+    <string name="finish">Finish</string>
+    <string name="discard">Discard</string>
     <string name="permission_grant">Before you can use the camera, you need to grant permission.</string>
     <string name="permission_denied">You denied the permission. In order for you to use the camera, you need to grant the permission.\n\nIf denied, you can grant the permission in the settings.</string>
     <string name="grant_permission">Grant permission</string>
@@ -46,8 +58,10 @@
     // Product creation strings
     <string name="products">Products</string>
     <string name="add_product">Add Product</string>
+    <string name="create_product">Create Product</string>
     <string name="attach">Attach</string>
     <string name="detach">Detach</string>
+    <string name="attach_product">Attach Product</string>
     <string name="attach_photo">Attach Photo</string>
     <string name="product_title">Product title</string>
     <string name="product_price">Product Price</string>
@@ -60,5 +74,30 @@
     <string name="uh_oh">Uh Oh</string>
     <string name="requests">Requests</string>
     <string name="you_have_13_notifications">You have 13 notifications</string>
+    <string name="pending_order">Pending Order</string>
+    <string name="ongoing_order">Ongoing Order</string>
+    <string name="dispatch_order">Dispatch Order</string>
+    <string name="cancel_order">Cancel Order</string>
+    <string name="ongoing_order_progress">Order in progress</string>
+    <string name="dispatch_success">Order dispatched successfully. A courier will contact you to pick up the item shortly</string>
+
+    // Content Creation Options Screen
+    <string name="create">Create</string>
+
+    // Profile
+    <string name="edit_profile">Edit Profile</string>
+    <string name="no_item_image">Camera image with a strike through</string>
+
+    // Checkout Page Strings
+    <string name="checkout">Checkout</string>
+    <string name="delivery">Delivery</string>
+    <string name="payment">Payment</string>
+    <string name="review">Review</string>
+
+    //Payments Method screens
+    <string name="card_number">Card Number</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="cvv">CVV</string>
+    <string name="card_holder_name">Card Holder Name</string>
 
 </resources>

@@ -33,6 +33,16 @@ private val LightColorScheme = lightColorScheme(
     onSurface = LightText,
     onBackground = Grey60,
 
+    // Actual light mode values, uncomment to use and comment the above
+//    primary = Purple20,
+//    secondary = Green20,
+//    tertiary = Red20,
+//    background = Grey40,
+//    surface = LightGrey,
+//    error = Red80,
+//    onSurface = DarkText,
+//    onBackground = Grey20,
+
     /* Other default colors to override
 
     surface = Color(0xFFFFFBFE),
