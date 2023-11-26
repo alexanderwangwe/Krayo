@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -21,21 +23,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.krayo.art.data.DataSource
+import com.krayo.art.data.models.PaymentMethod
 
 @Composable
 fun PaymentScreen() {
     Column {
-        PaymentsCard()
+        PaymentMethodList(
+            paymentMethodList = DataSource().loadPaymentMethods()
+        )
         Spacer(modifier = Modifier.padding(vertical = 10.dp))
     }
 }
 
 @Composable
-fun PaymentsCard() {
-    var listOfPayments = listOf("M-Pesa on Delivery", "Credit Card", "M-pesa")
-    var selectedPayment by remember { mutableStateOf(listOfPayments[0]) }
-    Card(
+fun PaymentCard(paymentMethod: PaymentMethod, modifier: Modifier = Modifier){
+
+    Card (
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSurface,
@@ -43,41 +50,40 @@ fun PaymentsCard() {
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
         ),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-    ) {
-
-        for (payment in listOfPayments) {
-            Row(
+            .padding(10.dp)
+    ){
+        Row(Modifier.padding(15.dp)){
+            Icon(
+                painter = painterResource(id = paymentMethod.paymentIcon),
+                contentDescription = paymentMethod.paymentName,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        selectedPayment = payment
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = payment,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(10.dp)
-                )
-                RadioButton(
-                    selected = payment == selectedPayment,
-                    onClick = {
-                        selectedPayment = payment
-                    },
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = MaterialTheme.colorScheme.primary
-                    )
-                )
-            }
-            if (payment != listOfPayments.last())
-                Divider(
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                    .padding(10.dp)
+                    .size(24.dp)
+            )
+            Text(
+                text = paymentMethod.paymentName,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(10.dp)
+            )
         }
     }
+}
+
+@Composable
+fun PaymentMethodList(paymentMethodList: List<PaymentMethod>, modifier: Modifier = Modifier) {
+    var selectedPayment by remember { mutableStateOf(paymentMethodList[0]) }
+    Column(modifier = modifier) {
+        for (paymentMethod in paymentMethodList) {
+            PaymentCard(
+                paymentMethod = paymentMethod,
+                modifier = Modifier.clickable { selectedPayment = paymentMethod }
+            )
+            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+        }
+    }
+
 }
