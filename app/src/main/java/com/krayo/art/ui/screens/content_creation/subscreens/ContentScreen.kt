@@ -100,7 +100,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-@RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
@@ -112,14 +111,11 @@ fun ContentScreen(
     activity: MainActivity
 ) {
     val cameraPermissionState: PermissionState =
-        rememberPermissionState(android.Manifest.permission.CAMERA)
+        rememberPermissionState(Manifest.permission.CAMERA)
     val audioPermissionState: PermissionState =
-        rememberPermissionState(android.Manifest.permission.RECORD_AUDIO)
-    val videoPermissionState: PermissionState =
-        rememberPermissionState(android.Manifest.permission.READ_MEDIA_VIDEO)
+        rememberPermissionState(Manifest.permission.RECORD_AUDIO)
     val hasCameraPermission = cameraPermissionState.status.isGranted
     val hasAudioPermission = audioPermissionState.status.isGranted
-    val hasVideoPermission = videoPermissionState.status.isGranted
     val permissionRefused = cameraPermissionState.status.shouldShowRationale
     val capturedContent = rememberSaveable {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -162,14 +158,12 @@ fun ContentScreen(
             outputDirectory = outputDirectory,
             navController = navController,
             modifier = Modifier.fillMaxSize(),
-            hasVideoPermission = hasVideoPermission,
             hasAudioPermission = hasAudioPermission,
             hasPermission = hasCameraPermission,
             permissionRefused = permissionRefused,
             onRequestPermission = {
                 cameraPermissionState.launchPermissionRequest()
                 audioPermissionState.launchPermissionRequest()
-                videoPermissionState.launchPermissionRequest()
             },
             lifecycleOwner = lifecycleOwner,
             updateContentCapturedState = {
@@ -345,7 +339,6 @@ private fun onVideoSave(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 private fun CameraContainer(
     lensFacingState: CameraFacing,
@@ -353,7 +346,6 @@ private fun CameraContainer(
     outputDirectory: File,
     navController: NavController,
     modifier: Modifier,
-    hasVideoPermission: Boolean,
     hasAudioPermission: Boolean,
     hasPermission: Boolean,
     permissionRefused: Boolean,
@@ -379,7 +371,6 @@ private fun CameraContainer(
             navController = navController,
             permissionRefused = permissionRefused,
             modifier = modifier,
-            hasVideoPermission = hasVideoPermission,
             hasAudioPermission = hasAudioPermission,
             hasCameraPermission = hasPermission,
             onRequestPermission = onRequestPermission
@@ -708,7 +699,6 @@ private fun PermissionRequest(
     navController: NavController,
     modifier: Modifier,
     permissionRefused: Boolean,
-    hasVideoPermission: Boolean,
     hasAudioPermission: Boolean,
     hasCameraPermission: Boolean,
     onRequestPermission: () -> Unit = {}
@@ -734,10 +724,6 @@ private fun PermissionRequest(
             stringResource(id = R.string.grant_permission_audio)
         }
 
-        !hasVideoPermission -> {
-            stringResource(id = R.string.grant_video_permission)
-        }
-
         else -> {
             stringResource(id = R.string.all_permissions_granted)
         }
@@ -745,15 +731,14 @@ private fun PermissionRequest(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier
-            .fillMaxSize()
-            .padding(15.dp),
+            .fillMaxSize(),
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
                         WindowInsets.statusBars.asPaddingValues()
-                    ),
+                    ).padding(top = 8.dp, start = 4.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -761,7 +746,7 @@ private fun PermissionRequest(
                     navController.popBackStack()
                 }) {
                     Icon(
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier.size(35.dp),
                         painter = painterResource(id = R.drawable.cancel),
                         contentDescription = stringResource(
                             id = R.string.go_back
@@ -773,7 +758,7 @@ private fun PermissionRequest(
     ) { paddingValues ->
         Column(
             modifier = modifier
-                .fillMaxSize(),
+                .fillMaxSize().padding(horizontal = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

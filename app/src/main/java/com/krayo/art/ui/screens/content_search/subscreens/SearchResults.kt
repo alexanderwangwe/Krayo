@@ -242,7 +242,6 @@ private fun SearchResults(
                         }
                     }
                 )
-
             }
         }
     }

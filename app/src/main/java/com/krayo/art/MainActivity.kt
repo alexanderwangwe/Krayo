@@ -32,6 +32,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -413,13 +414,13 @@ private fun BottomNavigationBar(
     val colorsHome = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.primary,
         unselectedIconColor = Color.White,
-        indicatorColor = Grey80,
+        indicatorColor = MaterialTheme.colorScheme.surface,
     )
 
     val colorsNormal = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.primary,
         unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-        indicatorColor = MaterialTheme.colorScheme.background,
+        indicatorColor = MaterialTheme.colorScheme.surface,
     )
 
     val colors = if (currentDestination?.hierarchy?.any { it.route == Destinations.HOME.name } == true) colorsHome else colorsNormal

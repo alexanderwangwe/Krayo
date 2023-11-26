@@ -11,13 +11,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -29,8 +26,8 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
@@ -113,49 +110,11 @@ fun DiscoverScreen(
             .fillMaxSize(),
         topBar = {
             if (!contentDisplayMode.value)
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            top = WindowInsets.statusBars
-                                .asPaddingValues()
-                                .calculateTopPadding() + 10.dp
-                        )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 15.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
+                Column {
+                    TopBar(
+                        modifier = Modifier,
+                        navController = navController
                     )
-                    {
-                        Row(
-                            modifier = Modifier.weight(1f),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(end = 10.dp),
-                                style = MaterialTheme.typography.titleLarge,
-                                text = "Trending"
-                            )
-                            Text(
-                                text = "Events",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Gray
-                            )
-                        }
-                        IconButton(onClick = {
-                            navController.navigate(Destinations.CONTENT_SEARCH.name)
-                        }) {
-                            Icon(
-                                Icons.Outlined.Search,
-                                modifier = Modifier.padding(10.dp),
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                contentDescription = null
-                            )
-                        }
-
-                    }
                     Categories(
                         items = categories,
                         updateSelected = { selectedCategory = it },
@@ -228,6 +187,68 @@ fun DiscoverScreen(
     }
 }
 
+private enum class TopBarState {
+    DISCOVER,
+    EVENTS
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@Composable
+private fun TopBar(
+    modifier: Modifier,
+    navController: NavController
+) {
+    val topBarState = remember { mutableStateOf(TopBarState.DISCOVER) }
+    val textColorTrending =
+        if (topBarState.value == TopBarState.DISCOVER) MaterialTheme.colorScheme.onSurface else Color.Gray
+    val textColorEvents =
+        if (topBarState.value == TopBarState.EVENTS) MaterialTheme.colorScheme.onSurface else Color.Gray
+    val fontStyleTrending =
+        if (topBarState.value == TopBarState.DISCOVER) MaterialTheme.typography.titleLarge else MaterialTheme.typography.bodyMedium
+    val fontStyleEvents =
+        if (topBarState.value == TopBarState.EVENTS) MaterialTheme.typography.titleLarge else MaterialTheme.typography.bodyMedium
+    CenterAlignedTopAppBar(title = {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                color = textColorTrending,
+                text = "Discover",
+                style = fontStyleTrending,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
+                    topBarState.value = TopBarState.DISCOVER
+                }
+            )
+            Text(
+                text = "Events",
+                color = textColorEvents,
+                style = fontStyleEvents,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
+                    topBarState.value = TopBarState.EVENTS
+                }
+            )
+        }
+    }, actions = {
+        Surface(
+            shape = CircleShape,
+            modifier = Modifier
+                .size(35.dp),
+            color = MaterialTheme.colorScheme.onBackground,
+            onClick = {
+                navController.navigate(Destinations.CONTENT_SEARCH.name)
+            }
+        ) {
+            Icon(
+                Icons.Outlined.Search,
+                modifier = Modifier.padding(7.5.dp),
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null
+            )
+        }
+    })
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Categories(
@@ -257,7 +278,7 @@ fun Categories(
                 label = {
                     Text(
                         items[index],
-                        color = if (selected == items[index]) Color.Black else MaterialTheme.colorScheme.onSurface,
+                        color = if (selected == items[index]) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
@@ -265,7 +286,7 @@ fun Categories(
                 leadingIcon = if (selected == items[index]) {
                     {
                         Icon(
-                            tint = Color.Black,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             imageVector = Icons.Filled.Done,
                             contentDescription = "Done icon",
                             modifier = Modifier.size(FilterChipDefaults.IconSize)

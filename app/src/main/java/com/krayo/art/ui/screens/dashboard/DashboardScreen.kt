@@ -80,7 +80,6 @@ fun DashboardScreen(navController: NavController, paddingValues: PaddingValues, 
                 navController = navController,
                 scope = scope,
             )
-
         },
     ) { innerPadding ->
         // Where is the declaration for this?

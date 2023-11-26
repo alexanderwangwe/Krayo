@@ -53,7 +53,7 @@
     <string name="finish">Finish</string>
     <string name="discard">Discard</string>
     <string name="videoFile">videoFile</string>
-    <string name="permission_grant">Before you can use the camera, you need to grant permission for the following: \nCamera access\nMicrophone access.</string>
+    <string name="permission_grant">Before you can use the camera, you need to grant permission for the following: \n1. Camera access\n2. Microphone access.</string>
     <string name="permission_denied">You denied the permission. In order for you to use the camera, you need to grant the permission.\n\nIf denied, you can grant the permission in the settings.</string>
     <string name="grant_permission_camera">Grant Camera Permission</string>
     <string name="grant_permission_audio">Grant Audio Permission</string>
