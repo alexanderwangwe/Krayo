@@ -100,4 +100,10 @@
     <string name="requests">Requests</string>
     <string name="you_have_13_notifications">You have 13 notifications</string>
 
+    //Payments Method screens
+    <string name="card_number">Card Number</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="cvv">CVV</string>
+    <string name="card_holder_name">Card Holder Name</string>
+
 </resources>

@@ -121,6 +121,26 @@ fun DashboardScreen(navController: NavController, paddingValues: PaddingValues, 
             )
         )
 
+        val completedOrder = OrderUiState(
+            orderAmount = "KES 1000",
+            orderDate = "12/12/2023",
+            orderNumber = "8473990293",
+            orderStatus = "Completed",
+            orderItem = OrderItem(
+                orderItemName = "Spider man piece",
+                orderItemDescription = "A piece on spider man flying over manhattan with MJ on his back",
+                orderItemPrice = "KES 1000",
+            ),
+            customer = Customer(
+                customerName = "Peter Parker",
+                customerPhoneNumber = "0712345678",
+                customerEmail = "peter@gmail.com",
+                customerAddress = "New York, Manhattan",
+            )
+        )
+
+
+
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
             ModalNavigationDrawer(
                 modifier = if (!drawerIsOpen) Modifier.zIndex(1f) else Modifier,
@@ -149,7 +169,10 @@ fun DashboardScreen(navController: NavController, paddingValues: PaddingValues, 
                         Spacer(modifier = Modifier.height(10.dp))
                         OngoingLabelText()
                         OrderCard(ongoingOrder, navController)
-                        Spacer(modifier = Modifier.height(75.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
+                        CompletedLabelText()
+                        OrderCard(completedOrder, navController)
+                        Spacer(modifier = Modifier.height(110.dp))
                     }
                 }
             }
@@ -310,6 +333,8 @@ fun PendingLabelText() {
     }
 }
 
+
+
 @Composable
 private fun OrderCard(order: OrderUiState, navController: NavController) {
     Card(
@@ -329,7 +354,12 @@ private fun OrderCard(order: OrderUiState, navController: NavController) {
         ) {
             Text(
                 text = order.orderStatus.uppercase(),
-                color = if (order.orderStatus == "Pending") MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                color = when {
+                    (order.orderStatus == "Pending") -> MaterialTheme.colorScheme.tertiary
+                    (order.orderStatus == "Ongoing") -> MaterialTheme.colorScheme.primary
+                    (order.orderStatus == "Completed") -> MaterialTheme.colorScheme.secondary
+                    else -> MaterialTheme.colorScheme.primary
+                },
             )
             Text(
                 text = "Order #" + order.orderNumber.uppercase(),
@@ -338,6 +368,7 @@ private fun OrderCard(order: OrderUiState, navController: NavController) {
 
             Row(
                 modifier = Modifier.padding(vertical = 10.dp)
+                    .padding(start = 5.dp)
             ) {
                 Image(
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
@@ -396,8 +427,13 @@ private fun OrderCard(order: OrderUiState, navController: NavController) {
 
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (order.orderStatus == "Pending") MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = when {
+                        order.orderStatus == "Pending" -> MaterialTheme.colorScheme.tertiary
+                        order.orderStatus == "Ongoing" -> MaterialTheme.colorScheme.primary
+                        order.orderStatus == "Completed" -> MaterialTheme.colorScheme.secondary
+                        else -> MaterialTheme.colorScheme.primary
+                    },
+                    contentColor = MaterialTheme.colorScheme.onSurface,
                 ),
                 modifier = Modifier.fillMaxWidth(), onClick = {
                     navController.navigate(Destinations.ORDER_VIEW.name)
@@ -412,6 +448,12 @@ private fun OrderCard(order: OrderUiState, navController: NavController) {
 private fun OngoingLabelText() {
     Column {
         Text("Ongoing Orders (1)", style = MaterialTheme.typography.bodyLarge)
+    }
+}
+@Composable
+private fun CompletedLabelText() {
+    Column {
+        Text("Completed Orders (1)", style = MaterialTheme.typography.bodyLarge)
     }
 }
 
