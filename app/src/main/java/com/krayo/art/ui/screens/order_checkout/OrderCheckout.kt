@@ -15,8 +15,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.krayo.art.MainActivity
 import com.krayo.art.ui.screens.order_checkout.components.BagScreen
 import com.krayo.art.ui.screens.order_checkout.components.OrderCheckoutBottomBar
 import com.krayo.art.ui.screens.order_checkout.components.OrderCheckoutTopBar
@@ -32,6 +35,7 @@ fun OrderCheckoutScreen(
     innerPadding: PaddingValues,
     navController: NavController,
     updateNavState: (Boolean) -> Unit,
+    context: MainActivity
 ) {
     var currentState by rememberSaveable {
         mutableStateOf(OrderCheckoutTopBarState.Bag)
@@ -44,6 +48,10 @@ fun OrderCheckoutScreen(
         OrderCheckoutTopBarState.Review -> "Review"
         OrderCheckoutTopBarState.Success -> "Success"
     }
+
+    val window = context.window
+    window.navigationBarColor = Color.Transparent.toArgb()
+    window.statusBarColor = Color.Transparent.toArgb()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

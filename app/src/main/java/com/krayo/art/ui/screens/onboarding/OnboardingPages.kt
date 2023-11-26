@@ -2,6 +2,42 @@ package com.krayo.art.ui.screens.onboarding
 
 import androidx.annotation.DrawableRes
 
+sealed class OnboardingRules(
+    val title: String,
+    val description: String
+) {
+    object First : OnboardingRules(
+        title = "Ensure you own your work",
+        description = "For art, you must be the original creator of the artwork you are selling. You must have the right to sell the artwork."
+    )
+
+    object Second : OnboardingRules(
+        title = "Be of age",
+        description = "You must be at least 18 years old to sell"
+    )
+
+    object Third : OnboardingRules(
+        title = "Ship within 2 days",
+        description = "You must ship your art to the buyer within 48 hours of getting the order. If you live in an area where we have offices, we will handle shipping and returns on your behalf."
+    )
+
+    // If you're selling a print, make sure it's a limited edition print.
+    object Fourth : OnboardingRules(
+        title = "Be honest",
+        description = "Ensure that what you're selling is authentic and in the condition you described. Don't sell counterfeits"
+    )
+
+    object Fifth : OnboardingRules(
+        title = "Make sure the product arrives to the buyer in good condition",
+        description = "Payment is held in Escrow until the buyer receives your product and doesn't issue a return within 3 days."
+    )
+
+//    object Sixth : OnboardingRules(
+//        title = "You can sell anything!",
+//        description = "Other products other than art is allowed. However, you must have the right to sell the product."
+//    )
+}
+
 sealed class OnBoardingPages(
     @DrawableRes
     val image: Int,

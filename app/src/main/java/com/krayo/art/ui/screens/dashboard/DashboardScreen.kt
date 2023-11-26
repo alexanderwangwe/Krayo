@@ -80,7 +80,6 @@ fun DashboardScreen(navController: NavController, paddingValues: PaddingValues, 
                 navController = navController,
                 scope = scope,
             )
-
         },
     ) { innerPadding ->
         // Where is the declaration for this?
@@ -344,7 +343,7 @@ private fun OrderCard(order: OrderUiState, navController: NavController) {
             contentColor = MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = 0.dp
         ),
         modifier = Modifier
             .fillMaxWidth()

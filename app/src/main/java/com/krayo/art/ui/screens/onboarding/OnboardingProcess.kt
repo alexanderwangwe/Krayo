@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -56,8 +57,10 @@ import com.krayo.art.constants.Destinations
 fun FirstOnboardingScreen(
     navController: NavController,
     paddingValues: PaddingValues,
-    context: MainActivity
+    context: MainActivity,
+    updateNavState: (Boolean) -> Unit
 ) {
+    updateNavState(true)
     val pages = listOf(
         OnBoardingPages.First,
         OnBoardingPages.Second,
@@ -139,7 +142,6 @@ fun ButtonSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = padding.calculateBottomPadding())
     ) {
         Button(
             modifier = Modifier
@@ -148,7 +150,7 @@ fun ButtonSection(
             enabled = true,
             onClick = {
                 onBoardingIsCompleted(context = context)
-                navController.navigate(Destinations.CONTENT_CREATION.name)
+                navController.navigate(Destinations.ONBOARDING.name)
             }) {
             Text(
                 text = "Start Selling",
@@ -164,17 +166,6 @@ private fun PageIndicator(navController: NavController, pageCount: Int, currentP
     Row(
         modifier = modifier.height(47.5.dp)
     ){
-        Icon(
-            modifier = Modifier.size(35.dp).clickable {
-                navController.popBackStack()
-            },
-            tint = MaterialTheme.colorScheme.onSurface,
-            painter = painterResource(id = R.drawable.cancel),
-            contentDescription = stringResource(
-                id = R.string.go_back
-            )
-        )
-
         Row (
             modifier = modifier.weight(1f),
             horizontalArrangement =
@@ -182,7 +173,6 @@ private fun PageIndicator(navController: NavController, pageCount: Int, currentP
                 Alignment.CenterHorizontally),
             verticalAlignment = Alignment.Top,
         ) {
-
             repeat(pageCount){
                 IndicatorSingleDash(isSelected = it == currentPage )
             }

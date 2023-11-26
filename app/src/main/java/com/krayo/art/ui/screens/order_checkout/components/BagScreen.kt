@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Button
@@ -42,14 +41,16 @@ fun BagScreen() {
 }
 
 @Composable
-fun DeliveryCard() {
+fun DeliveryCard(
+    canChangeDelivery: Boolean = true
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = 0.dp
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -68,19 +69,24 @@ fun DeliveryCard() {
                     Icon(Icons.Outlined.LocationOn, contentDescription = null)
                     Text(text = "Delivery Address", modifier = Modifier.padding(start = 8.dp))
                 }
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onBackground,
-                    ),onClick = { /*TODO*/ }) {
-                    Text("Change", style = MaterialTheme.typography.bodyMedium)
-                }
+                if (canChangeDelivery)
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onBackground,
+                        ), onClick = { /*TODO*/ }) {
+                        Text(
+                            "Change",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
             }
             Divider(
                 modifier = Modifier.padding(vertical = 10.dp),
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Ole-Sangale link road, Along Strathmore University, Nairobi, Kenya",
+                text = "Some random address near our school or something like that, Nairobi, Kenya",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -96,10 +102,11 @@ fun OrderSummaryCard() {
             contentColor = MaterialTheme.colorScheme.onSurface,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = 0.dp
         ),
         modifier = Modifier
-            .fillMaxWidth().height(250.dp)
+            .fillMaxWidth()
+            .height(250.dp)
     ) {
         Column(
             Modifier
@@ -128,7 +135,8 @@ fun OrderSummaryCard() {
                 Column(
                     verticalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .weight(1.5f).fillMaxSize()
+                        .weight(1.5f)
+                        .fillMaxSize()
                 ){
                     Column{
                         Text("Spider Man")

@@ -1,6 +1,7 @@
 package com.krayo.art
 
 import SearchResultsScreen
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,6 +10,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,6 +32,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -44,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -64,10 +68,12 @@ import com.krayo.art.ui.screens.analytics.AnalyticsScreen
 import com.krayo.art.ui.screens.authentication.AuthenticationScreen
 import com.krayo.art.ui.screens.authentication.subscreens.AuthSuccessScreen
 import com.krayo.art.ui.screens.authentication.subscreens.EmailVerification
-import com.krayo.art.ui.screens.communities.CommunitiesScreen
+import com.krayo.art.ui.screens.communities.ChatsScreen
+import com.krayo.art.ui.screens.communities.subscreens.JoinCommunitiesScreen
 import com.krayo.art.ui.screens.communities.subscreens.RequestsScreen
 import com.krayo.art.ui.screens.content_creation.ContentCreationScreen
 import com.krayo.art.ui.screens.content_creation.subscreens.ContentCreationOptionsScreen
+import com.krayo.art.ui.screens.content_creation.subscreens.LastCapturedContent
 import com.krayo.art.ui.screens.content_search.ContentSearchScreen
 import com.krayo.art.ui.screens.dashboard.DashboardScreen
 import com.krayo.art.ui.screens.dashboard.subscreens.DispatchSuccessScreen
@@ -78,19 +84,18 @@ import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
 import com.krayo.art.ui.screens.onboarding.OnboardingBegin
 import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.screens.order_checkout.OrderCheckoutScreen
-import com.krayo.art.ui.screens.payment_methods.CreditOrDebitScreen
 import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.NavDrawerItem
 import com.krayo.art.ui.screens.profile.ProfileScreen
 import com.krayo.art.ui.theme.Grey80
 import com.krayo.art.ui.theme.KrayoTheme
+import com.krayo.art.ui.theme.LightGrey
 import kotlinx.coroutines.launch
 import java.io.File
 
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     private fun getOutputDirectory(): File {
         val mediaDir = externalMediaDirs.firstOrNull()?.let {
             File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
@@ -150,7 +155,6 @@ class MainActivity : ComponentActivity() {
                     },
                     contentWindowInsets = WindowInsets.statusBars
                 ) { innerPadding ->
-
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         ModalNavigationDrawer(
                             drawerState = drawerState,
@@ -226,7 +230,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                                 composable(route = Destinations.DISCOVER.name) {
-                                    DiscoverScreen(navController, innerPadding)
+                                    DiscoverScreen(navController, innerPadding, updateNavState = { show ->
+                                        showBottomNav = show
+                                    }, this@MainActivity)
                                 }
 
                                 // CONTENT CREATION ROUTES
@@ -255,20 +261,24 @@ class MainActivity : ComponentActivity() {
                                     AddProductScreen(navController, innerPadding)
                                 }
 
-                        composable(route = Destinations.REQUESTS.name) {
-                            RequestsScreen(navController, innerPadding)
-                        }
                                 composable(route = Destinations.SEARCH_RESULTS.name) {
                                     SearchResultsScreen(
                                         navController,
                                         innerPadding,
+                                        context = this@MainActivity,
                                         updateNavState = { show ->
                                             showBottomNav = show
                                         },
                                     )
                                 }
-                                composable(route = Destinations.CHAT.name) {
-                                    CommunitiesScreen(navController, innerPadding)
+                                composable(route = Destinations.CHATS.name) {
+                                    ChatsScreen(navController, innerPadding)
+                                }
+                                composable(route = Destinations.JoinCommunities.name) {
+                                    JoinCommunitiesScreen(navController, innerPadding)
+                                }
+                                composable(route = Destinations.REQUESTS.name) {
+                                    RequestsScreen(navController, innerPadding)
                                 }
                                 composable(route = Destinations.PROFILE.name) {
                                     ProfileScreen(
@@ -289,10 +299,6 @@ class MainActivity : ComponentActivity() {
                                         },
                                     )
                                 }
-                                composable(route = Destinations.COMMUNITIES.name) {
-                                    CommunitiesScreen(navController, innerPadding)
-                                }
-
 
                                 // Dashboard routes
                                 composable(route = Destinations.DASHBOARD.name) {
@@ -331,11 +337,12 @@ class MainActivity : ComponentActivity() {
                                         })
                                 }
                                 composable(route = Destinations.ONBOARDING_PROCESS.name) {
-                                    FirstOnboardingScreen(
-                                        navController = navController,
+                                    FirstOnboardingScreen(navController = navController,
                                         innerPadding,
-                                        context = this@MainActivity
-                                    )
+                                        context = this@MainActivity,
+                                        updateNavState = { show ->
+                                            showBottomNav = show
+                                        })
                                 }
                                 composable(route = Destinations.ONBOARDING_BEGIN.name) {
                                     OnboardingBegin(
@@ -345,6 +352,12 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
 
+                                composable(route = Destinations.LAST_CAPTURED_CONTENT.name) {
+                                    LastCapturedContent(
+                                        navController = navController,
+                                        activity = this@MainActivity
+                                    )
+                                }
 
                                 // AUTHENTICATION ROUTES
                                 composable(route = Destinations.ACCOUNT_CREATION.name) {
@@ -370,17 +383,11 @@ class MainActivity : ComponentActivity() {
                                 composable(route = Destinations.ORDER_CHECKOUT.name) {
                                     OrderCheckoutScreen(
                                         innerPadding, navController,
-                                    ){
-                                        showBottomNav = it
-                                    }
-                                }
-                                composable(route = Destinations.CREDIT_OR_DEBIT_CARD.name) {
-                                    CreditOrDebitScreen(
-                                        innerPadding, navController,
-                                    ) {
-                                        showBottomNav
-                                    }
-
+                                        context = this@MainActivity,
+                                        updateNavState = {
+                                            showBottomNav = it
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -411,17 +418,30 @@ private fun BottomNavigationBar(
     val colorsHome = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.primary,
         unselectedIconColor = Color.White,
-        indicatorColor = Grey80,
+        indicatorColor = MaterialTheme.colorScheme.surface,
     )
 
     val colorsNormal = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.primary,
         unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-        indicatorColor = MaterialTheme.colorScheme.background,
+        indicatorColor = MaterialTheme.colorScheme.surface,
     )
 
     val colors = if (currentDestination?.hierarchy?.any { it.route == Destinations.HOME.name } == true) colorsHome else colorsNormal
     val color = MaterialTheme.colorScheme.onBackground
+
+    val window = (context as Activity).window
+    if(navController.graph.findStartDestination().id == currentDestination?.id){
+        window.navigationBarColor = Color.Black.toArgb()
+        window.statusBarColor = Color.Transparent.toArgb()
+    }else{
+        window.navigationBarColor = Color.Transparent.toArgb()
+        window.statusBarColor = Color.Transparent.toArgb()
+    }
+
+    if(currentDestination?.hierarchy?.any { it.route == Destinations.PROFILE.name } == true) {
+        window.statusBarColor = Color.Transparent.toArgb()
+    }
 
     NavigationBar(
         modifier = modifier
@@ -437,8 +457,7 @@ private fun BottomNavigationBar(
 
                 //top line
                 drawLine(
-                    color = color,
-                    start = Offset(0f, 0f), //(0,0) at top-left point of the box
+                    color = color, start = Offset(0f, 0f), //(0,0) at top-left point of the box
                     end = Offset(x, 0f), //top-right point of the box
                     strokeWidth = strokeWidth
                 )
@@ -449,7 +468,7 @@ private fun BottomNavigationBar(
     ) {
         NavigationBarItem(
             selected = currentDestination?.hierarchy?.any {
-                it.route == Destinations.HOME.name || it.route == Destinations.CONTENT_SEARCH.name || it.route == Destinations.SEARCH_RESULTS.name
+                it.route == Destinations.HOME.name
             } == true,
             onClick = {
                 updateNavState(true)
@@ -495,17 +514,16 @@ private fun BottomNavigationBar(
                 )
             }, colors = colors
         )
-        NavigationBarItem(
-            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CONTENT_CREATION.name || it.route == Destinations.ONBOARDING.name } == true,
+        NavigationBarItem(selected = currentDestination?.hierarchy?.any { it.route == Destinations.ONBOARDING_PROCESS.name } == true,
             onClick = {
                 if (onBoardingIsCompleted(context = context)) {
                     updateNavState(false)
-                    bottomNavState = Destinations.CONTENT_CREATION.name
-                    navController.popBackStack(Destinations.CONTENT_CREATION.name, false)
-                } else {
-                    updateNavState(false)
                     bottomNavState = Destinations.ONBOARDING.name
-                    navController.navigate(Destinations.ONBOARDING.name) {
+                    navController.popBackStack(Destinations.ONBOARDING.name, false)
+                } else {
+                    updateNavState(true)
+                    bottomNavState = Destinations.ONBOARDING_PROCESS.name
+                    navController.navigate(Destinations.ONBOARDING_PROCESS.name) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -524,11 +542,11 @@ private fun BottomNavigationBar(
             }, colors = colors
         )
         NavigationBarItem(
-            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CHAT.name } == true,
+            selected = currentDestination?.hierarchy?.any { it.route == Destinations.CHATS.name } == true,
             onClick = {
                 updateNavState(true)
-                bottomNavState = Destinations.CHAT.name
-                navController.navigate(Destinations.CHAT.name) {
+                bottomNavState = Destinations.CHATS.name
+                navController.navigate(Destinations.CHATS.name) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
