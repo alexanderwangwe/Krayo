@@ -69,8 +69,6 @@ fun CreditOrDebitScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .padding(bottom = 32.dp)
-
-
         )
 
         Row (
