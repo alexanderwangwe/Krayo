@@ -10,7 +10,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,7 +31,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -84,13 +82,13 @@ import com.krayo.art.ui.screens.onboarding.FirstOnboardingScreen
 import com.krayo.art.ui.screens.onboarding.OnboardingBegin
 import com.krayo.art.ui.screens.onboarding.OnboardingScreen
 import com.krayo.art.ui.screens.order_checkout.OrderCheckoutScreen
+import com.krayo.art.ui.screens.payment_methods.CreditOrDebitScreen
 import com.krayo.art.ui.screens.product_creation.ProductCreationScreen
 import com.krayo.art.ui.screens.product_creation.subscreens.AddProductScreen
 import com.krayo.art.ui.screens.profile.NavDrawerItem
 import com.krayo.art.ui.screens.profile.ProfileScreen
 import com.krayo.art.ui.theme.Grey80
 import com.krayo.art.ui.theme.KrayoTheme
-import com.krayo.art.ui.theme.LightGrey
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -423,15 +421,15 @@ private fun BottomNavigationBar(
     val currentDestination = navBackStackEntry?.destination
 
     val colorsHome = NavigationBarItemDefaults.colors(
-        selectedIconColor = MaterialTheme.colorScheme.primary,
+        selectedIconColor = Color.White,
         unselectedIconColor = Color.White,
-        indicatorColor = MaterialTheme.colorScheme.surface,
+        indicatorColor = Grey80,
     )
 
     val colorsNormal = NavigationBarItemDefaults.colors(
-        selectedIconColor = MaterialTheme.colorScheme.primary,
+        selectedIconColor = MaterialTheme.colorScheme.onSurface,
         unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-        indicatorColor = MaterialTheme.colorScheme.surface,
+        indicatorColor = MaterialTheme.colorScheme.background,
     )
 
     val colors = if (currentDestination?.hierarchy?.any { it.route == Destinations.HOME.name } == true) colorsHome else colorsNormal

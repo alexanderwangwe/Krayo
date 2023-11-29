@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,7 +28,6 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
@@ -44,6 +45,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -209,24 +211,27 @@ private fun TopBar(
         if (topBarState.value == TopBarState.EVENTS) MaterialTheme.typography.titleLarge else MaterialTheme.typography.bodyMedium
     CenterAlignedTopAppBar(title = {
         Row(
-            modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 color = textColorTrending,
                 text = "Discover",
                 style = fontStyleTrending,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
-                    topBarState.value = TopBarState.DISCOVER
-                }
+                modifier = Modifier
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                    .clickable {
+                        topBarState.value = TopBarState.DISCOVER
+                    }
             )
             Text(
                 text = "Events",
                 color = textColorEvents,
                 style = fontStyleEvents,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).clickable {
-                    topBarState.value = TopBarState.EVENTS
-                }
+                modifier = Modifier
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                    .clickable {
+                        topBarState.value = TopBarState.EVENTS
+                    }
             )
         }
     }, actions = {
@@ -234,7 +239,7 @@ private fun TopBar(
             shape = CircleShape,
             modifier = Modifier
                 .size(35.dp),
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.background,
             onClick = {
                 navController.navigate(Destinations.CONTENT_SEARCH.name)
             }
@@ -381,6 +386,11 @@ fun TrendingGrid(
             true -> {
                 VerticalPager(state = pagerState) { page ->
                     ContentDisplay(
+                        updateScrollState = {
+                            scope.launch {
+                                scrollState.scrollToItem(page)
+                            }
+                        },
                         navController = navController,
                         contentInfoData = contentInfoData,
                         hideContent = hideContent,
@@ -423,5 +433,7 @@ fun TrendingGrid(
             }
         }
     }
+
+    Spacer(modifier = Modifier.height(25.dp))
 
 }

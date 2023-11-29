@@ -113,8 +113,10 @@ fun ContentDisplay(
     updateCommentModalSheetState: () -> Unit,
     updateContentDisplayMode: () -> Unit,
     paddingValues: PaddingValues,
+    updateScrollState: () -> Unit,
     parentDestination: Destinations
 ) {
+    updateScrollState()
     val context = LocalView.current.context
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
